@@ -523,10 +523,15 @@ body.modal-open > :not(.checkout-overlay){filter:blur(8px);transition:filter .2s
 .pay-button{width:100%;height:64px;border:0;border-radius:15px;background:#1167ff;color:#fff;font-size:1.15rem;font-weight:900;cursor:pointer;box-shadow:0 16px 32px rgba(17,103,255,.28);transition:transform .15s,box-shadow .15s}
 .pay-button:hover{transform:translateY(-2px);box-shadow:0 20px 38px rgba(17,103,255,.34)}
 .checkout-note{font-size:.76rem;color:var(--mu);line-height:1.5;margin-top:14px;text-align:center}
-.checkout-success{display:none;margin-top:18px;border:1px solid rgba(60,171,60,.32);background:var(--softg);border-radius:16px;padding:16px;text-align:center}
+.checkout-success{display:none;margin-top:18px;border:1px solid rgba(60,171,60,.32);background:var(--softg);border-radius:20px;padding:22px;text-align:center}
 .checkout-success.is-visible{display:block}
-.checkout-success strong{display:block;color:var(--tx);font-size:1rem;margin-bottom:6px}
-.download-link{display:inline-flex;margin-top:10px;align-items:center;justify-content:center;min-height:46px;padding:0 22px;border-radius:999px;background:var(--g);color:#fff;text-decoration:none;font-weight:900}
+.checkout-success strong{display:block;color:var(--tx);font-size:1.18rem;line-height:1.2;margin-bottom:8px}
+.checkout-success p{max-width:440px;margin:0 auto;color:var(--mu);font-size:.92rem;line-height:1.55}
+.download-actions{display:flex;justify-content:center;margin-top:18px}
+.download-link{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:58px;width:min(100%,330px);padding:0 24px;border-radius:999px;background:var(--g);color:#fff;text-decoration:none;font-weight:950;font-size:1rem;box-shadow:0 16px 34px rgba(60,171,60,.28);transition:transform .15s,box-shadow .15s,background .15s}
+.download-link:hover{background:var(--gd);transform:translateY(-2px);box-shadow:0 20px 40px rgba(60,171,60,.34)}
+.download-link svg{width:19px;height:19px;flex:0 0 auto}
+.download-meta{display:block;margin-top:10px;color:var(--mu);font-size:.74rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
 @media(max-width:820px){
   .checkout-overlay{padding:14px}
   .checkout-modal{grid-template-columns:1fr}
@@ -1114,8 +1119,14 @@ body.modal-open > :not(.checkout-overlay){filter:blur(8px);transition:filter .2s
       </form>
       <div class="checkout-success" id="checkoutSuccess">
         <strong>Payment confirmed</strong>
-        Your download is ready. A receipt and access details should also be sent to your email.
-        <a class="download-link" href="data:text/plain;charset=utf-8,Your%20download%20will%20be%20connected%20after%20Stripe%20payment%20confirmation." id="downloadLink">Download Bundle</a>
+        <p>Your download is ready. A receipt and access details should also be sent to your email.</p>
+        <div class="download-actions">
+          <a class="download-link" href="#" id="downloadLink">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a1 1 0 0 1 1 1v8.6l2.3-2.3a1 1 0 1 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 1.4-1.4l2.3 2.3V4a1 1 0 0 1 1-1Zm-7 13a1 1 0 0 1 1 1v2h12v-2a1 1 0 1 1 2 0v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1Z" fill="currentColor"/></svg>
+            <span>Download Bundle</span>
+          </a>
+        </div>
+        <span class="download-meta">Secure Cloudflare delivery</span>
       </div>
     </section>
   </div>
@@ -1150,15 +1161,24 @@ const cardNumber = document.getElementById('cardNumber');
 const cardExpiry = document.getElementById('cardExpiry');
 const payButton = document.querySelector('.pay-button');
 const downloadLink = document.getElementById('downloadLink');
+const downloadLinkText = downloadLink.querySelector('span');
+
+const cloudflareDownloadBase = 'https://downloads.nexusluma.com';
+const cloudflareDownloadFallback = 'data:text/plain;charset=utf-8,Cloudflare%20download%20link%20is%20configured%20after%20Stripe%20confirmation.';
 
 const checkoutProducts = {
-  bundle: {name:'Full AI Business Builder Bundle', price:'$499.00', image:'AI%20bundle%20offer%202.webp', download:'full-ai-business-builder-bundle.zip'},
-  helper: {name:'AI Business Helper', price:'$297.00', image:'AI%20Business%20Helper.webp', download:'ai-business-helper.zip'},
-  email: {name:'Email Template Builder', price:'$197.00', image:'Email%20Template%20Builder.webp', download:'email-template-builder.zip'},
-  datahunt: {name:'DataHunt Market Research', price:'$97.00', image:'DataHunt.webp', download:'datahunt-market-research.zip'},
-  websiteVoice: {name:'Website Template With Voice AI', price:'$47.00', image:'Website%20template%20with%20Voice%20AI.webp', download:'website-template-with-voice-ai.zip'},
-  blueprint: {name:'Client Acquisition Blueprint', price:'$97.00', image:'AI%20bundle%20offer%202.webp', download:'client-acquisition-blueprint.zip'}
+  bundle: {name:'Full AI Business Builder Bundle', price:'$499.00', image:'AI%20bundle%20offer%202.webp', cloudflarePath:'bundle/Remote%20AI%20Income%20Skills%20Bundle.zip', fileName:'Remote AI Income Skills Bundle.zip'},
+  helper: {name:'AI Business Helper', price:'$297.00', image:'AI%20Business%20Helper.webp', cloudflarePath:'template2/AI%20Assistant.zip', fileName:'AI Assistant.zip'},
+  email: {name:'Email Template Builder', price:'$197.00', image:'Email%20Template%20Builder.webp', cloudflarePath:'websitetemplate/Email%20Builder.zip', fileName:'Email Builder.zip'},
+  datahunt: {name:'DataHunt Market Research', price:'$97.00', image:'DataHunt.webp', cloudflarePath:'websitetemplate/DataHunt.zip', fileName:'DataHunt.zip'},
+  websiteVoice: {name:'Website Template With Voice AI', price:'$47.00', image:'Website%20template%20with%20Voice%20AI.webp', cloudflarePath:'template2/Website%20with%20Voice%20AI.zip', fileName:'Website with Voice AI.zip'},
+  blueprint: {name:'Client Acquisition Blueprint', price:'$97.00', image:'AI%20bundle%20offer%202.webp', cloudflarePath:'bundle/Client%20Acquisition%20Blueprint.zip', fileName:'Client Acquisition Blueprint.zip'}
 };
+
+function cloudflareDownloadUrl(product) {
+  if (!product.cloudflarePath) return cloudflareDownloadFallback;
+  return cloudflareDownloadBase.replace(/\/$/, '') + '/' + product.cloudflarePath;
+}
 
 function productFromButton(button) {
   const text = button.textContent.toLowerCase();
@@ -1177,9 +1197,9 @@ function openCheckout(product) {
   checkoutTotal.textContent = product.price;
   checkoutImage.src = product.image;
   checkoutImage.alt = product.name + ' product preview';
-  downloadLink.textContent = 'Download ' + product.name;
-  downloadLink.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(product.name + ' download placeholder. Connect this link to your protected product file after Stripe confirms payment.');
-  downloadLink.setAttribute('download', product.download);
+  downloadLinkText.textContent = 'Download ' + product.name;
+  downloadLink.href = cloudflareDownloadUrl(product);
+  downloadLink.setAttribute('download', product.fileName);
   buyerName.value = saved.name || buyerName.value;
   buyerEmail.value = saved.email || buyerEmail.value;
   checkoutSuccess.classList.remove('is-visible');
