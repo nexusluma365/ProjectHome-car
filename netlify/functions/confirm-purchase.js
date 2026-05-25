@@ -1,4 +1,6 @@
 const Stripe = require('stripe');
+const {S3Client, GetObjectCommand} = require('@aws-sdk/client-s3');
+const {getSignedUrl} = require('@aws-sdk/s3-request-presigner');
 
 const buckets = {
   template: process.env.R2_BUCKET || process.env.CLOUDFLARE_R2_BUCKET_2 || 'template2',
@@ -61,6 +63,27 @@ function json(statusCode, body) {
   };
 }
 
+function getR2Client() {
+  const accountId = process.env.CLOUDFLARE_R2_ACCOUNT_ID || process.env.R2_ACCOUNT_ID || process.env.CF_R2_ACCOUNT_ID;
+  const accessKeyId = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID || process.env.R2_ACCESS_KEY_ID || process.env.R2_ACCESS_KEY;
+  const secretAccessKey = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY || process.env.R2_SECRET_ACCESS_KEY || process.env.R2_SECRET_KEY;
+
+  const missing = [];
+  if (!accountId) missing.push('R2_ACCOUNT_ID');
+  if (!accessKeyId) missing.push('R2_ACCESS_KEY_ID');
+  if (!secretAccessKey) missing.push('R2_SECRET_ACCESS_KEY');
+
+  if (missing.length) {
+    throw new Error('Missing Netlify environment variables: ' + missing.join(', ') + '. Save them, then clear cache and redeploy.');
+  }
+
+  return new S3Client({
+    region: 'auto',
+    endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
+    credentials: {accessKeyId, secretAccessKey}
+  });
+}
+
 exports.handler = async event => {
   if (event.httpMethod !== 'POST') {
     return {
@@ -93,8 +116,17 @@ exports.handler = async event => {
       return json(403, {error: 'Payment does not match this product.'});
     }
 
+    const r2 = getR2Client();
+    const command = new GetObjectCommand({
+      Bucket: product.bucket,
+      Key: product.fileKey,
+      ResponseContentDisposition: `attachment; filename="${product.fileName.replace(/"/g, '')}"`,
+      ResponseContentType: 'application/zip'
+    });
+    const downloadUrl = await getSignedUrl(r2, command, {expiresIn: 900});
+
     return json(200, {
-      downloadUrl: '/.netlify/functions/download-product',
+      downloadUrl,
       fileName: product.fileName,
       paymentIntentId: paymentIntent.id,
       productName: product.name

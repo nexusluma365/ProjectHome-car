@@ -1380,15 +1380,12 @@ async function fetchDownloadUrl(product, paymentIntentId) {
     return {
       downloadUrl: data.downloadUrl,
       fileName: data.fileName || product.fileName,
-      paymentIntentId
+      paymentIntentId,
+      directSignedUrl: !data.downloadUrl.includes('/.netlify/functions/')
     };
   }
 
-  return {
-    downloadUrl: '/.netlify/functions/download-product',
-    fileName: product.fileName,
-    paymentIntentId
-  };
+  throw new Error(data.error || 'Download could not be prepared.');
 }
 
 /* ── COMPLETE PURCHASE — show download inline ── */
@@ -1400,6 +1397,7 @@ function completePurchase(product, details) {
     downloadLink.href = url;
     downloadLink.dataset.productKey = product.key;
     downloadLink.dataset.paymentIntentId = details.paymentIntentId || activePaymentIntentId;
+    downloadLink.dataset.directSignedUrl = details.directSignedUrl ? 'true' : 'false';
     downloadLink.setAttribute('download', details.fileName || product.fileName);
   }
   if (downloadLinkText) downloadLinkText.textContent = 'Download ' + product.name;
@@ -1424,6 +1422,20 @@ async function downloadPaidProduct(event) {
 
   try {
     const isFunctionDownload = downloadLink.href.includes('/.netlify/functions/download-product');
+    const isDirectSignedUrl = downloadLink.dataset.directSignedUrl === 'true';
+
+    if (isDirectSignedUrl) {
+      const anchor = document.createElement('a');
+      anchor.href = downloadLink.href;
+      anchor.download = paidProduct.fileName;
+      anchor.rel = 'noopener';
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      if (downloadLinkText) downloadLinkText.textContent = previousText;
+      return;
+    }
+
     const response = await fetch(downloadLink.href, isFunctionDownload ? {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
