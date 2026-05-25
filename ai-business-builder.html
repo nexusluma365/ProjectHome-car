@@ -1366,26 +1366,19 @@ async function submitCardPayment() {
   setPayMessage('Payment is still processing. Please wait a moment and refresh if needed.');
 }
 
-/* ── FETCH DOWNLOAD URL — tries confirm endpoint, falls back to Cloudflare ── */
-async function fetchDownloadUrl(product, paymentIntentId) {
-  const payload = { productKey: product.key, paymentIntentId };
-
-  const res = await fetch('/.netlify/functions/confirm-purchase', {
-    method:  'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body:    JSON.stringify(payload)
+/* ── BUILD DOWNLOAD URL — server verifies payment and redirects to signed R2 URL ── */
+function fetchDownloadUrl(product, paymentIntentId) {
+  const query = new URLSearchParams({
+    productKey: product.key,
+    paymentIntentId
   });
-  const data = await res.json();
-  if (res.ok && data.downloadUrl) {
-    return {
-      downloadUrl: data.downloadUrl,
-      fileName: data.fileName || product.fileName,
-      paymentIntentId,
-      directSignedUrl: !data.downloadUrl.includes('/.netlify/functions/')
-    };
-  }
 
-  throw new Error(data.error || 'Download could not be prepared.');
+  return Promise.resolve({
+    downloadUrl: '/.netlify/functions/confirm-purchase?' + query.toString(),
+    fileName: product.fileName,
+    paymentIntentId,
+    serverRedirect: true
+  });
 }
 
 /* ── COMPLETE PURCHASE — show download inline ── */
@@ -1398,6 +1391,7 @@ function completePurchase(product, details) {
     downloadLink.dataset.productKey = product.key;
     downloadLink.dataset.paymentIntentId = details.paymentIntentId || activePaymentIntentId;
     downloadLink.dataset.directSignedUrl = details.directSignedUrl ? 'true' : 'false';
+    downloadLink.dataset.serverRedirect = details.serverRedirect ? 'true' : 'false';
     downloadLink.setAttribute('download', details.fileName || product.fileName);
   }
   if (downloadLinkText) downloadLinkText.textContent = 'Download ' + product.name;
@@ -1423,15 +1417,14 @@ async function downloadPaidProduct(event) {
   try {
     const isFunctionDownload = downloadLink.href.includes('/.netlify/functions/download-product');
     const isDirectSignedUrl = downloadLink.dataset.directSignedUrl === 'true';
+    const isServerRedirect = downloadLink.dataset.serverRedirect === 'true';
 
-    if (isDirectSignedUrl) {
-      const anchor = document.createElement('a');
-      anchor.href = downloadLink.href;
-      anchor.download = paidProduct.fileName;
-      anchor.rel = 'noopener';
-      document.body.appendChild(anchor);
-      anchor.click();
-      anchor.remove();
+    if (isDirectSignedUrl || isServerRedirect) {
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = downloadLink.href;
+      document.body.appendChild(iframe);
+      setTimeout(() => iframe.remove(), 60000);
       if (downloadLinkText) downloadLinkText.textContent = previousText;
       return;
     }

@@ -85,10 +85,10 @@ function getR2Client() {
 }
 
 exports.handler = async event => {
-  if (event.httpMethod !== 'POST') {
+  if (!['POST', 'GET'].includes(event.httpMethod)) {
     return {
       statusCode: 405,
-      headers: {'Allow': 'POST'},
+      headers: {'Allow': 'POST, GET'},
       body: JSON.stringify({error: 'Method not allowed'})
     };
   }
@@ -98,7 +98,9 @@ exports.handler = async event => {
   }
 
   try {
-    const payload = JSON.parse(event.body || '{}');
+    const payload = event.httpMethod === 'GET'
+      ? event.queryStringParameters || {}
+      : JSON.parse(event.body || '{}');
     const product = productCatalog[payload.productKey];
 
     if (!product || !payload.paymentIntentId) {
@@ -124,6 +126,17 @@ exports.handler = async event => {
       ResponseContentType: 'application/zip'
     });
     const downloadUrl = await getSignedUrl(r2, command, {expiresIn: 900});
+
+    if (event.httpMethod === 'GET') {
+      return {
+        statusCode: 302,
+        headers: {
+          'Location': downloadUrl,
+          'Cache-Control': 'no-store'
+        },
+        body: ''
+      };
+    }
 
     return json(200, {
       downloadUrl,
