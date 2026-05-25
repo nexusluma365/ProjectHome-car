@@ -1081,42 +1081,18 @@ body.modal-open > :not(.checkout-overlay){filter:blur(8px);transition:filter .2s
     <section class="checkout-form-panel">
       <div class="checkout-kicker">Stripe-backed payment</div>
       <h2 id="checkoutTitle">Complete Your Purchase</h2>
-      <div class="checkout-secure"><span>✓</span> Card details are handled through a Stripe-ready checkout flow.</div>
-      <form id="checkoutForm">
-        <div class="checkout-grid">
-          <div class="field">
-            <label for="buyerName">Name</label>
-            <input id="buyerName" name="buyerName" autocomplete="name" placeholder="Your name" required>
-          </div>
-          <div class="field">
-            <label for="buyerEmail">Email</label>
-            <input id="buyerEmail" name="buyerEmail" type="email" autocomplete="email" placeholder="you@example.com" required>
-          </div>
-          <div class="field full">
-            <label for="cardElement">Card Information</label>
-            <div id="cardElement" class="stripe-card-field"></div>
-          </div>
-          <div class="field full">
-            <label for="billingZip">Billing ZIP</label>
-            <input id="billingZip" name="billingZip" inputmode="numeric" autocomplete="postal-code" placeholder="ZIP code" required>
-          </div>
-        </div>
-        <label class="save-row">
-          <input id="saveCheckout" type="checkbox" checked>
-          <span>Remember my name, email, and Stripe customer preference for future purchases. Full card numbers should be tokenized by Stripe and are not stored on this page.</span>
-        </label>
-        <div class="purchase-alert">All purchases are final. Please make sure you do not double purchase before completing payment.</div>
-        <div class="checkout-error" id="checkoutError"></div>
-        <button class="pay-button" type="submit">Pay Securely</button>
-        <p class="checkout-note">Payments are processed securely with Stripe. Your product download appears in this popup after payment is confirmed.</p>
-      </form>
+      <div class="checkout-secure"><span>✓</span> Card details are encrypted and processed directly through Stripe.</div>
+      <div id="paymentElement" style="margin-bottom:18px;min-height:54px"></div>
+      <div class="checkout-error" id="checkoutError"></div>
+      <button class="pay-button" type="button" id="paySubmit" onclick="submitCardPayment()">Pay Securely</button>
+      <p class="checkout-note">Payments are processed securely with Stripe. Your product download appears in this popup after payment is confirmed.</p>
       <div class="checkout-success" id="checkoutSuccess">
         <strong>Payment confirmed</strong>
         <p>Your download is ready. A receipt and access details should also be sent to your email.</p>
         <div class="download-actions">
           <a class="download-link" href="#" id="downloadLink">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a1 1 0 0 1 1 1v8.6l2.3-2.3a1 1 0 1 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 1.4-1.4l2.3 2.3V4a1 1 0 0 1 1-1Zm-7 13a1 1 0 0 1 1 1v2h12v-2a1 1 0 1 1 2 0v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1Z" fill="currentColor"/></svg>
-            <span>Download Bundle</span>
+            <span id="downloadLinkText">Download Bundle</span>
           </a>
         </div>
         <span class="download-meta">Cloudflare R2 delivery</span>
@@ -1127,6 +1103,7 @@ body.modal-open > :not(.checkout-overlay){filter:blur(8px);transition:filter .2s
 
 <script src="https://js.stripe.com/v3/"></script>
 <script>
+/* ── VIDEO ── */
 const heroVideoWrap = document.querySelector('.hero-vsl');
 const heroVideo = document.querySelector('.hero-video');
 const videoSoundBadge = document.querySelector('.video-sound-badge');
@@ -1142,253 +1119,280 @@ if (heroVideoWrap && heroVideo) {
   });
 }
 
-const checkoutOverlay = document.getElementById('checkoutOverlay');
-const checkoutForm = document.getElementById('checkoutForm');
-const checkoutSuccess = document.getElementById('checkoutSuccess');
-const checkoutProduct = document.getElementById('checkoutProduct');
-const checkoutSummaryProduct = document.getElementById('checkoutSummaryProduct');
-const checkoutTotal = document.getElementById('checkoutTotal');
-const checkoutImage = document.getElementById('checkoutImage');
-const buyerName = document.getElementById('buyerName');
-const buyerEmail = document.getElementById('buyerEmail');
-const billingZip = document.getElementById('billingZip');
-const payButton = document.querySelector('.pay-button');
-const downloadLink = document.getElementById('downloadLink');
-const downloadLinkText = downloadLink.querySelector('span');
-const checkoutError = document.getElementById('checkoutError');
-
-const stripePublishableKey = 'pk_test_51REXciCySCiHdPyyts0MmZgs87FbnLYUjF91PvwD4XWyL1SE1g7pkC5cxSKmOsNucOmLp6pB2yPSRhHFixA1p15Y00xqtwpkEL';
-const stripe = window.Stripe ? window.Stripe(stripePublishableKey) : null;
-const stripeElements = stripe ? stripe.elements() : null;
-const cardElement = stripeElements ? stripeElements.create('card', {
-  hidePostalCode: true,
-  style: {
-    base: {
-      color: '#172017',
-      fontFamily: "-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif",
-      fontSize: '16px',
-      fontWeight: '600',
-      '::placeholder': {color: '#8a948a'}
-    },
-    invalid: {color: '#9b1c1c'}
-  }
-}) : null;
+/* ── PRODUCT CATALOG ── */
 const cloudflareDownloadBase = 'https://downloads.nexusluma.com';
-const cloudflareDownloadFallback = 'data:text/plain;charset=utf-8,Cloudflare%20download%20link%20is%20configured%20after%20Stripe%20confirmation.';
+const cloudflareDownloadFallback = 'data:text/plain;charset=utf-8,Download%20link%20will%20be%20provided%20after%20payment%20confirmation.';
 
 /*
   Cloudflare R2 product map
-  ------------------------------------------------------------
-  This organizes exactly where each paid product should be pulled from.
-  The bucket names and file keys match the screenshots you uploaded.
+  Each product maps to a specific bucket + fileKey on Cloudflare R2.
+  In production your Netlify function verifies the payment then returns
+  the signed download URL. The bucket/fileKey below are used as fallback.
 
-  Full Bundle                -> bucket: aibundlekit     -> Ai offer products.zip
-  AI Business Helper          -> bucket: template2       -> AI Assistant.zip
-  Email Template Builder      -> bucket: websitetemplate -> Email Builder.zip
-  DataHunt Market Research    -> bucket: websitetemplate -> DataHunt.zip
-  Website Template            -> bucket: template2       -> Website with Voice AI.zip
-
-  Important: browser-only HTML cannot securely read Netlify environment variables
-  or private R2 credentials. In production, your Stripe webhook or Netlify function
-  should verify payment first, then create/return the signed download URL using
-  the matching bucket + fileKey below.
+  Full Bundle              -> bucket: aibundlekit     -> Ai offer products.zip
+  AI Business Helper       -> bucket: template2       -> AI Assistant.zip
+  Email Template Builder   -> bucket: websitetemplate -> Email Builder.zip
+  DataHunt Market Research -> bucket: websitetemplate -> DataHunt.zip
+  Website Template         -> bucket: template2       -> Website with Voice AI.zip
 */
 const r2ProductCatalog = {
-  bundle: {
-    bucket: 'aibundlekit',
-    fileKey: 'Ai offer products.zip',
-    fileName: 'Ai offer products.zip'
-  },
-  helper: {
-    bucket: 'template2',
-    fileKey: 'AI Assistant.zip',
-    fileName: 'AI Assistant.zip'
-  },
-  email: {
-    bucket: 'websitetemplate',
-    fileKey: 'Email Builder.zip',
-    fileName: 'Email Builder.zip'
-  },
-  datahunt: {
-    bucket: 'websitetemplate',
-    fileKey: 'DataHunt.zip',
-    fileName: 'DataHunt.zip'
-  },
-  websiteVoice: {
-    bucket: 'template2',
-    fileKey: 'Website with Voice AI.zip',
-    fileName: 'Website with Voice AI.zip'
-  },
-  blueprint: {
-    bucket: 'aibundlekit',
-    fileKey: 'Ai offer products.zip',
-    fileName: 'Ai offer products.zip'
-  }
+  bundle:      { bucket:'aibundlekit',     fileKey:'Ai offer products.zip',     fileName:'Ai offer products.zip' },
+  helper:      { bucket:'template2',       fileKey:'AI Assistant.zip',           fileName:'AI Assistant.zip' },
+  email:       { bucket:'websitetemplate', fileKey:'Email Builder.zip',          fileName:'Email Builder.zip' },
+  datahunt:    { bucket:'websitetemplate', fileKey:'DataHunt.zip',               fileName:'DataHunt.zip' },
+  websiteVoice:{ bucket:'template2',       fileKey:'Website with Voice AI.zip',  fileName:'Website with Voice AI.zip' },
+  blueprint:   { bucket:'aibundlekit',     fileKey:'Ai offer products.zip',     fileName:'Ai offer products.zip' }
 };
 
 const checkoutProducts = {
-  bundle: {key:'bundle', name:'Full AI Business Builder Bundle', price:'$499.00', image:'AI%20bundle%20offer%202.webp', ...r2ProductCatalog.bundle},
-  helper: {key:'helper', name:'AI Business Helper', price:'$297.00', image:'AI%20Business%20Helper.webp', ...r2ProductCatalog.helper},
-  email: {key:'email', name:'Email Template Builder', price:'$197.00', image:'Email%20Template%20Builder.webp', ...r2ProductCatalog.email},
-  datahunt: {key:'datahunt', name:'DataHunt Market Research', price:'$97.00', image:'DataHunt.webp', ...r2ProductCatalog.datahunt},
-  websiteVoice: {key:'websiteVoice', name:'Website Template', price:'$47.00', image:'Website%20template%20with%20Voice%20AI.webp', ...r2ProductCatalog.websiteVoice},
-  blueprint: {key:'blueprint', name:'Client Acquisition Blueprint', price:'$97.00', image:'AI%20bundle%20offer%202.webp', ...r2ProductCatalog.blueprint}
+  bundle:      { key:'bundle',       name:'Full AI Business Builder Bundle',  price:'$499.00', image:'AI%20bundle%20offer%202.webp',              ...r2ProductCatalog.bundle },
+  helper:      { key:'helper',       name:'AI Business Helper',               price:'$297.00', image:'AI%20Business%20Helper.webp',               ...r2ProductCatalog.helper },
+  email:       { key:'email',        name:'Email Template Builder',           price:'$197.00', image:'Email%20Template%20Builder.webp',           ...r2ProductCatalog.email },
+  datahunt:    { key:'datahunt',     name:'DataHunt Market Research',         price:'$97.00',  image:'DataHunt.webp',                             ...r2ProductCatalog.datahunt },
+  websiteVoice:{ key:'websiteVoice', name:'Website Template',                 price:'$47.00',  image:'Website%20template%20with%20Voice%20AI.webp',...r2ProductCatalog.websiteVoice },
+  blueprint:   { key:'blueprint',    name:'Client Acquisition Blueprint',     price:'$97.00',  image:'AI%20bundle%20offer%202.webp',              ...r2ProductCatalog.blueprint }
 };
+
+/* ── STATE ── */
+const STRIPE_KEY = 'pk_test_51REXciCySCiHdPyyts0MmZgs87FbnLYUjF91PvwD4XWyL1SE1g7pkC5cxSKmOsNucOmLp6pB2yPSRhHFixA1p15Y00xqtwpkEL';
+const stripe = window.Stripe ? window.Stripe(STRIPE_KEY) : null;
+let stripeElements = null;
+let activePaymentClientSecret = '';
+let payBusy = false;
 let activeProduct = checkoutProducts.bundle;
 let paidProduct = null;
 
-if (cardElement) cardElement.mount('#cardElement');
+/* ── DOM REFS ── */
+const checkoutOverlay       = document.getElementById('checkoutOverlay');
+const checkoutSuccess       = document.getElementById('checkoutSuccess');
+const checkoutProduct       = document.getElementById('checkoutProduct');
+const checkoutSummaryProduct= document.getElementById('checkoutSummaryProduct');
+const checkoutTotal         = document.getElementById('checkoutTotal');
+const checkoutImage         = document.getElementById('checkoutImage');
+const payButton             = document.getElementById('paySubmit');
+const downloadLink          = document.getElementById('downloadLink');
+const downloadLinkText      = document.getElementById('downloadLinkText');
+const checkoutError         = document.getElementById('checkoutError');
 
+/* ── HELPERS ── */
 function encodeR2Path(product) {
   return product.bucket + '/' + product.fileKey.split('/').map(encodeURIComponent).join('/');
 }
-
 function cloudflareDownloadUrl(product) {
   if (!product.bucket || !product.fileKey) return cloudflareDownloadFallback;
   return cloudflareDownloadBase.replace(/\/$/, '') + '/' + encodeR2Path(product);
 }
-
 function productFromButton(button) {
-  const productKey = button.dataset.product;
-  if (productKey && checkoutProducts[productKey]) return checkoutProducts[productKey];
-  const text = button.textContent.toLowerCase();
-  if (text.includes('helper')) return checkoutProducts.helper;
-  if (text.includes('email')) return checkoutProducts.email;
-  if (text.includes('datahunt')) return checkoutProducts.datahunt;
-  if (text.includes('website') || text.includes('template')) return checkoutProducts.websiteVoice;
-  if (text.includes('blueprint')) return checkoutProducts.blueprint;
+  const k = button.dataset.product;
+  if (k && checkoutProducts[k]) return checkoutProducts[k];
+  const t = button.textContent.toLowerCase();
+  if (t.includes('helper'))                        return checkoutProducts.helper;
+  if (t.includes('email'))                         return checkoutProducts.email;
+  if (t.includes('datahunt'))                      return checkoutProducts.datahunt;
+  if (t.includes('website') || t.includes('template')) return checkoutProducts.websiteVoice;
+  if (t.includes('blueprint'))                     return checkoutProducts.blueprint;
   return checkoutProducts.bundle;
 }
 
-function openCheckout(product) {
-  const saved = JSON.parse(localStorage.getItem('rai_checkout_profile') || '{}');
-  activeProduct = product;
-  paidProduct = null;
-  checkoutProduct.textContent = product.name;
-  checkoutSummaryProduct.textContent = product.name;
-  checkoutTotal.textContent = product.price;
-  checkoutImage.src = product.image;
-  checkoutImage.alt = product.name + ' product preview';
-  downloadLinkText.textContent = 'Download ' + product.name;
-  downloadLink.href = cloudflareDownloadUrl(product);
-  downloadLink.setAttribute('download', product.fileName);
-  buyerName.value = saved.name || buyerName.value;
-  buyerEmail.value = saved.email || buyerEmail.value;
-  checkoutSuccess.classList.remove('is-visible');
-  checkoutError.classList.remove('is-visible');
-  checkoutError.textContent = '';
-  checkoutForm.style.display = 'block';
-  payButton.disabled = false;
-  payButton.textContent = 'Pay ' + product.price + ' Securely';
-  checkoutOverlay.classList.add('is-open');
-  checkoutOverlay.setAttribute('aria-hidden','false');
-  document.body.classList.add('modal-open');
-  setTimeout(() => buyerName.focus(), 50);
+/* ── UI STATE ── */
+function setPayMessage(message, isOk = false) {
+  if (!checkoutError) return;
+  checkoutError.textContent = message || '';
+  checkoutError.classList.toggle('is-visible', Boolean(message));
+  checkoutError.style.color = isOk ? 'var(--g)' : '';
+}
+function setPayBusy(isBusy, label) {
+  payBusy = isBusy;
+  if (!payButton) return;
+  payButton.disabled = isBusy;
+  payButton.textContent = isBusy ? 'Processing...' : (label || 'Pay Securely');
 }
 
+/* ── OPEN CHECKOUT — creates intent + mounts Payment Element ── */
+async function openCheckout(product) {
+  activeProduct = product;
+  paidProduct   = null;
+
+  /* populate left panel */
+  if (checkoutProduct)        checkoutProduct.textContent        = product.name;
+  if (checkoutSummaryProduct) checkoutSummaryProduct.textContent = product.name;
+  if (checkoutTotal)          checkoutTotal.textContent          = product.price;
+  if (checkoutImage) {
+    checkoutImage.src = product.image;
+    checkoutImage.alt = product.name + ' product preview';
+  }
+
+  /* reset right panel */
+  if (checkoutSuccess) checkoutSuccess.classList.remove('is-visible');
+  setPayMessage('');
+  setPayBusy(true, 'Loading payment form…');
+
+  /* clear any previous Payment Element */
+  const peContainer = document.getElementById('paymentElement');
+  if (peContainer) peContainer.innerHTML = '';
+
+  /* show the overlay immediately so user sees "Loading…" */
+  checkoutOverlay.classList.add('is-open');
+  checkoutOverlay.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
+
+  if (!stripe) {
+    setPayBusy(false, 'Pay ' + product.price + ' Securely');
+    setPayMessage('Stripe did not load. Please refresh and try again.');
+    return;
+  }
+
+  try {
+    /* create payment intent */
+    const res = await fetch('/.netlify/functions/create-payment-intent', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ productKey: product.key })
+    });
+    const data = await res.json();
+    if (!res.ok || !data.clientSecret) throw new Error(data.error || 'Unable to start payment.');
+
+    activePaymentClientSecret = data.clientSecret;
+
+    /* build Payment Element with brand colours */
+    if (stripeElements) stripeElements = null;
+    stripeElements = stripe.elements({
+      clientSecret: activePaymentClientSecret,
+      appearance: {
+        theme: 'stripe',
+        variables: {
+          colorPrimary:         '#3CAB3C',
+          colorText:            '#172017',
+          colorTextSecondary:   '#5d685d',
+          colorBackground:      '#ffffff',
+          colorDanger:          '#d32f2f',
+          borderRadius:         '14px',
+          fontFamily:           "-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif",
+          spacingUnit:          '4px'
+        },
+        rules: {
+          '.Input': {
+            border:     '1px solid #dfe7df',
+            boxShadow:  'none',
+            padding:    '14px 16px'
+          },
+          '.Label': {
+            color:      '#172017',
+            fontWeight: '850',
+            fontSize:   '13px'
+          }
+        }
+      }
+    });
+
+    const paymentElement = stripeElements.create('payment', {
+      wallets: { applePay: 'never', googlePay: 'never' }
+    });
+    paymentElement.mount('#paymentElement');
+    setPayBusy(false, 'Pay ' + product.price + ' Securely');
+
+  } catch (err) {
+    setPayBusy(false, 'Try Again');
+    setPayMessage(err.message || 'Payment setup failed. Please refresh and try again.');
+  }
+}
+
+/* ── SUBMIT PAYMENT ── */
+async function submitCardPayment() {
+  if (payBusy || !stripe || !stripeElements) return;
+  setPayBusy(true);
+  setPayMessage('');
+
+  const { error, paymentIntent } = await stripe.confirmPayment({
+    elements:  stripeElements,
+    redirect:  'if_required'
+  });
+
+  if (error) {
+    setPayBusy(false, 'Pay ' + (activeProduct ? activeProduct.price : '') + ' Securely');
+    setPayMessage(error.message || 'Payment failed. Please try again.');
+    return;
+  }
+
+  if (paymentIntent && paymentIntent.status === 'succeeded') {
+    try {
+      const confirmed = await fetchDownloadUrl(activeProduct, paymentIntent.id);
+      completePurchase(activeProduct, confirmed);
+    } catch (err) {
+      setPayBusy(false);
+      setPayMessage(err.message || 'Payment confirmed but the download could not be prepared. Please contact support.');
+    }
+    return;
+  }
+
+  setPayBusy(false);
+  setPayMessage('Payment is still processing. Please wait a moment and refresh if needed.');
+}
+
+/* ── FETCH DOWNLOAD URL — tries confirm endpoint, falls back to Cloudflare ── */
+async function fetchDownloadUrl(product, paymentIntentId) {
+  const payload = { productKey: product.key, paymentIntentId };
+
+  const endpoints = [
+    '/.netlify/functions/confirm-purchase',
+    '/api/stripe/confirm-purchase'
+  ];
+
+  for (const endpoint of endpoints) {
+    try {
+      const res = await fetch(endpoint, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const url = data.downloadUrl || data.url || data.signedUrl || '';
+        if (url) return { downloadUrl: url };
+      }
+    } catch (e) {
+      console.warn('Confirm endpoint failed:', endpoint, e);
+    }
+  }
+
+  /* fallback: construct direct Cloudflare R2 URL */
+  return { downloadUrl: cloudflareDownloadUrl(product) };
+}
+
+/* ── COMPLETE PURCHASE — show download inline ── */
+function completePurchase(product, details) {
+  paidProduct = product;
+  const url = (details && details.downloadUrl) ? details.downloadUrl : cloudflareDownloadUrl(product);
+
+  if (downloadLink) {
+    downloadLink.href = url;
+    downloadLink.setAttribute('download', product.fileName);
+  }
+  if (downloadLinkText) downloadLinkText.textContent = 'Download ' + product.name;
+  if (checkoutSuccess)  checkoutSuccess.classList.add('is-visible');
+  setPayMessage('Payment confirmed. Your download is ready.', true);
+  setPayBusy(false, 'Paid');
+}
+
+/* ── CLOSE ── */
 function closeCheckout() {
   checkoutOverlay.classList.remove('is-open');
-  checkoutOverlay.setAttribute('aria-hidden','true');
+  checkoutOverlay.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('modal-open');
 }
 
-document.querySelectorAll('.hero-cta,.pcard-btn,.cat-btn,.bundle-btn').forEach(button => {
-  button.addEventListener('click', event => {
-    event.preventDefault();
-    openCheckout(productFromButton(button));
+/* ── BUTTON WIRING ── */
+document.querySelectorAll('.hero-cta,.pcard-btn,.cat-btn,.bundle-btn').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    openCheckout(productFromButton(btn));
   });
 });
 
 document.querySelector('.checkout-close').addEventListener('click', closeCheckout);
-checkoutOverlay.addEventListener('click', event => {
-  if (event.target === checkoutOverlay) closeCheckout();
-});
-document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && checkoutOverlay.classList.contains('is-open')) closeCheckout();
-});
-
-function showCheckoutError(message) {
-  checkoutError.textContent = message;
-  checkoutError.classList.add('is-visible');
-}
-
-downloadLink.addEventListener('click', async event => {
-  event.preventDefault();
-  if (!paidProduct) {
-    showCheckoutError('Please complete payment before downloading.');
-    return;
-  }
-  downloadLinkText.textContent = 'Preparing download...';
-  try {
-    const response = await fetch(downloadLink.href, {mode:'cors'});
-    if (!response.ok) throw new Error('Download request failed.');
-    const blob = await response.blob();
-    const objectUrl = URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
-    anchor.href = objectUrl;
-    anchor.download = paidProduct.fileName;
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
-    setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
-    downloadLinkText.textContent = 'Download ' + paidProduct.name;
-  } catch (error) {
-    downloadLinkText.textContent = 'Download ' + paidProduct.name;
-    showCheckoutError('The payment was confirmed, but the download could not start in-page. Check the Cloudflare R2 public domain or CORS settings for this file.');
-  }
-});
-
-checkoutForm.addEventListener('submit', async event => {
-  event.preventDefault();
-  checkoutError.classList.remove('is-visible');
-  if (!stripe || !cardElement) {
-    showCheckoutError('Stripe did not load. Please refresh and try again.');
-    return;
-  }
-  if (document.getElementById('saveCheckout').checked) {
-    localStorage.setItem('rai_checkout_profile', JSON.stringify({
-      name: buyerName.value.trim(),
-      email: buyerEmail.value.trim(),
-      stripeCustomerPreferred: true
-    }));
-  }
-  payButton.textContent = 'Confirming with Stripe...';
-  payButton.disabled = true;
-  try {
-    const intentResponse = await fetch('/.netlify/functions/create-payment-intent', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        productKey: activeProduct.key,
-        name: buyerName.value.trim(),
-        email: buyerEmail.value.trim()
-      })
-    });
-    const intent = await intentResponse.json();
-    if (!intentResponse.ok || !intent.clientSecret) {
-      throw new Error(intent.error || 'Unable to start payment.');
-    }
-    const result = await stripe.confirmCardPayment(intent.clientSecret, {
-      payment_method: {
-        card: cardElement,
-        billing_details: {
-          name: buyerName.value.trim(),
-          email: buyerEmail.value.trim(),
-          address: {postal_code: billingZip.value.trim()}
-        }
-      },
-      receipt_email: buyerEmail.value.trim()
-    });
-    if (result.error) throw new Error(result.error.message || 'Payment was not confirmed.');
-    paidProduct = activeProduct;
-    checkoutForm.style.display = 'none';
-    checkoutSuccess.classList.add('is-visible');
-  } catch (error) {
-    showCheckoutError(error.message || 'Payment could not be completed. Please try again.');
-  } finally {
-    payButton.disabled = false;
-    payButton.textContent = 'Pay ' + activeProduct.price + ' Securely';
-  }
+checkoutOverlay.addEventListener('click', e => { if (e.target === checkoutOverlay) closeCheckout(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && checkoutOverlay.classList.contains('is-open')) closeCheckout();
 });
 </script>
 </body>
