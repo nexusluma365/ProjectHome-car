@@ -4,9 +4,10 @@
   "private": true,
   "description": "Static Netlify landing page with Stripe checkout for Remote AI Income Skills.",
   "scripts": {
-    "check": "node -c netlify/functions/create-payment-intent.js"
+    "check": "node -c netlify/functions/create-payment-intent.js && node -c netlify/functions/confirm-purchase.js && node -c netlify/functions/download-product.js"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.699.0",
     "stripe": "^17.7.0"
   }
 }

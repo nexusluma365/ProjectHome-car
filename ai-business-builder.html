@@ -513,8 +513,10 @@ body.modal-open > :not(.checkout-overlay){filter:blur(8px);transition:filter .2s
 .field input:focus{border-color:rgba(60,171,60,.65);box-shadow:0 0 0 4px rgba(60,171,60,.12)}
 .stripe-card-field{min-height:54px;border:1px solid #dfe7df;border-radius:14px;padding:17px 16px;background:#fff;transition:border .15s,box-shadow .15s}
 .stripe-card-field.StripeElement--focus{border-color:rgba(60,171,60,.65);box-shadow:0 0 0 4px rgba(60,171,60,.12)}
+.payment-loading{min-height:108px;border:1px solid #dfe7df;border-radius:16px;background:#fbfdfb;display:grid;place-items:center;color:var(--mu);font-size:.9rem;font-weight:850;text-align:center;padding:18px}
 .checkout-error{display:none;margin:0 0 14px;padding:11px 12px;border-radius:12px;background:#fff1f1;border:1px solid #f0c1c1;color:#9b1c1c;font-size:.78rem;font-weight:800;line-height:1.35;text-align:center}
 .checkout-error.is-visible{display:block}
+.checkout-error.is-ok{background:var(--softg);border-color:rgba(60,171,60,.32);color:var(--g)}
 .card-input{position:relative}
 .card-input input{padding-left:56px;padding-right:46px}
 .card-badge{position:absolute;left:15px;top:50%;transform:translateY(-50%);display:flex}
@@ -1082,10 +1084,10 @@ body.modal-open > :not(.checkout-overlay){filter:blur(8px);transition:filter .2s
       <div class="checkout-kicker">Stripe-backed payment</div>
       <h2 id="checkoutTitle">Complete Your Purchase</h2>
       <div class="checkout-secure"><span>✓</span> Card details are encrypted and processed directly through Stripe.</div>
-      <div id="paymentElement" style="margin-bottom:18px;min-height:54px"></div>
+      <div id="paymentElement" style="margin-bottom:18px;min-height:108px"></div>
       <div class="checkout-error" id="checkoutError"></div>
       <button class="pay-button" type="button" id="paySubmit" onclick="submitCardPayment()">Pay Securely</button>
-      <p class="checkout-note">Payments are processed securely with Stripe. Your product download appears in this popup after payment is confirmed.</p>
+      <p class="checkout-note" id="checkoutNote">Payments are processed securely with Stripe. Your product download appears in this popup after payment is confirmed.</p>
       <div class="checkout-success" id="checkoutSuccess">
         <strong>Payment confirmed</strong>
         <p>Your download is ready. A receipt and access details should also be sent to your email.</p>
@@ -1158,6 +1160,8 @@ const STRIPE_KEY = 'pk_test_51REXciCySCiHdPyyts0MmZgs87FbnLYUjF91PvwD4XWyL1SE1g7
 const stripe = window.Stripe ? window.Stripe(STRIPE_KEY) : null;
 let stripeElements = null;
 let activePaymentClientSecret = '';
+let activePaymentIntentId = '';
+let checkoutRequestId = 0;
 let payBusy = false;
 let activeProduct = checkoutProducts.bundle;
 let paidProduct = null;
@@ -1170,9 +1174,11 @@ const checkoutSummaryProduct= document.getElementById('checkoutSummaryProduct');
 const checkoutTotal         = document.getElementById('checkoutTotal');
 const checkoutImage         = document.getElementById('checkoutImage');
 const payButton             = document.getElementById('paySubmit');
+const paymentElementHost    = document.getElementById('paymentElement');
 const downloadLink          = document.getElementById('downloadLink');
 const downloadLinkText      = document.getElementById('downloadLinkText');
 const checkoutError         = document.getElementById('checkoutError');
+const checkoutNote          = document.getElementById('checkoutNote');
 
 /* ── HELPERS ── */
 function encodeR2Path(product) {
@@ -1199,19 +1205,25 @@ function setPayMessage(message, isOk = false) {
   if (!checkoutError) return;
   checkoutError.textContent = message || '';
   checkoutError.classList.toggle('is-visible', Boolean(message));
-  checkoutError.style.color = isOk ? 'var(--g)' : '';
+  checkoutError.classList.toggle('is-ok', Boolean(message && isOk));
 }
 function setPayBusy(isBusy, label) {
   payBusy = isBusy;
   if (!payButton) return;
   payButton.disabled = isBusy;
-  payButton.textContent = isBusy ? 'Processing...' : (label || 'Pay Securely');
+  payButton.textContent = isBusy ? (label || 'Processing...') : (label || 'Pay Securely');
+}
+function setPaymentLoading(message) {
+  if (!paymentElementHost) return;
+  paymentElementHost.innerHTML = '<div class="payment-loading">' + message + '</div>';
 }
 
 /* ── OPEN CHECKOUT — creates intent + mounts Payment Element ── */
 async function openCheckout(product) {
+  const requestId = ++checkoutRequestId;
   activeProduct = product;
   paidProduct   = null;
+  activePaymentIntentId = '';
 
   /* populate left panel */
   if (checkoutProduct)        checkoutProduct.textContent        = product.name;
@@ -1224,12 +1236,14 @@ async function openCheckout(product) {
 
   /* reset right panel */
   if (checkoutSuccess) checkoutSuccess.classList.remove('is-visible');
+  if (paymentElementHost) paymentElementHost.style.display = '';
+  if (payButton) payButton.style.display = '';
+  if (checkoutNote) checkoutNote.style.display = '';
   setPayMessage('');
-  setPayBusy(true, 'Loading payment form…');
+  setPayBusy(true, 'Loading payment form...');
 
   /* clear any previous Payment Element */
-  const peContainer = document.getElementById('paymentElement');
-  if (peContainer) peContainer.innerHTML = '';
+  setPaymentLoading('Loading secure Stripe checkout...');
 
   /* show the overlay immediately so user sees "Loading…" */
   checkoutOverlay.classList.add('is-open');
@@ -1243,6 +1257,8 @@ async function openCheckout(product) {
   }
 
   try {
+    await new Promise(resolve => requestAnimationFrame(resolve));
+
     /* create payment intent */
     const res = await fetch('/.netlify/functions/create-payment-intent', {
       method:  'POST',
@@ -1250,9 +1266,11 @@ async function openCheckout(product) {
       body:    JSON.stringify({ productKey: product.key })
     });
     const data = await res.json();
+    if (requestId !== checkoutRequestId) return;
     if (!res.ok || !data.clientSecret) throw new Error(data.error || 'Unable to start payment.');
 
     activePaymentClientSecret = data.clientSecret;
+    activePaymentIntentId = data.paymentIntentId || '';
 
     /* build Payment Element with brand colours */
     if (stripeElements) stripeElements = null;
@@ -1288,6 +1306,7 @@ async function openCheckout(product) {
     const paymentElement = stripeElements.create('payment', {
       wallets: { applePay: 'never', googlePay: 'never' }
     });
+    if (paymentElementHost) paymentElementHost.innerHTML = '';
     paymentElement.mount('#paymentElement');
     setPayBusy(false, 'Pay ' + product.price + ' Securely');
 
@@ -1315,6 +1334,7 @@ async function submitCardPayment() {
   }
 
   if (paymentIntent && paymentIntent.status === 'succeeded') {
+    activePaymentIntentId = paymentIntent.id;
     try {
       const confirmed = await fetchDownloadUrl(activeProduct, paymentIntent.id);
       completePurchase(activeProduct, confirmed);
@@ -1333,30 +1353,25 @@ async function submitCardPayment() {
 async function fetchDownloadUrl(product, paymentIntentId) {
   const payload = { productKey: product.key, paymentIntentId };
 
-  const endpoints = [
-    '/.netlify/functions/confirm-purchase',
-    '/api/stripe/confirm-purchase'
-  ];
-
-  for (const endpoint of endpoints) {
-    try {
-      const res = await fetch(endpoint, {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(payload)
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const url = data.downloadUrl || data.url || data.signedUrl || '';
-        if (url) return { downloadUrl: url };
-      }
-    } catch (e) {
-      console.warn('Confirm endpoint failed:', endpoint, e);
-    }
+  const res = await fetch('/.netlify/functions/confirm-purchase', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(payload)
+  });
+  const data = await res.json();
+  if (res.ok && data.downloadUrl) {
+    return {
+      downloadUrl: data.downloadUrl,
+      fileName: data.fileName || product.fileName,
+      paymentIntentId
+    };
   }
 
-  /* fallback: construct direct Cloudflare R2 URL */
-  return { downloadUrl: cloudflareDownloadUrl(product) };
+  return {
+    downloadUrl: '/.netlify/functions/download-product',
+    fileName: product.fileName,
+    paymentIntentId
+  };
 }
 
 /* ── COMPLETE PURCHASE — show download inline ── */
@@ -1366,12 +1381,64 @@ function completePurchase(product, details) {
 
   if (downloadLink) {
     downloadLink.href = url;
-    downloadLink.setAttribute('download', product.fileName);
+    downloadLink.dataset.productKey = product.key;
+    downloadLink.dataset.paymentIntentId = details.paymentIntentId || activePaymentIntentId;
+    downloadLink.setAttribute('download', details.fileName || product.fileName);
   }
   if (downloadLinkText) downloadLinkText.textContent = 'Download ' + product.name;
   if (checkoutSuccess)  checkoutSuccess.classList.add('is-visible');
+  if (paymentElementHost) paymentElementHost.style.display = 'none';
+  if (payButton) payButton.style.display = 'none';
+  if (checkoutNote) checkoutNote.style.display = 'none';
   setPayMessage('Payment confirmed. Your download is ready.', true);
   setPayBusy(false, 'Paid');
+}
+
+async function downloadPaidProduct(event) {
+  event.preventDefault();
+  if (!paidProduct) {
+    setPayMessage('Please complete payment before downloading.');
+    return;
+  }
+
+  const previousText = downloadLinkText ? downloadLinkText.textContent : '';
+  if (downloadLinkText) downloadLinkText.textContent = 'Preparing download...';
+  setPayMessage('');
+
+  try {
+    const isFunctionDownload = downloadLink.href.includes('/.netlify/functions/download-product');
+    const response = await fetch(downloadLink.href, isFunctionDownload ? {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        productKey: downloadLink.dataset.productKey,
+        paymentIntentId: downloadLink.dataset.paymentIntentId
+      })
+    } : {mode: 'cors'});
+
+    if (!response.ok) {
+      let message = 'Download could not be started.';
+      try {
+        const errorBody = await response.json();
+        if (errorBody.error) message = errorBody.error;
+      } catch (error) {}
+      throw new Error(message);
+    }
+
+    const blob = await response.blob();
+    const objectUrl = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = objectUrl;
+    anchor.download = paidProduct.fileName;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+    if (downloadLinkText) downloadLinkText.textContent = previousText;
+  } catch (error) {
+    if (downloadLinkText) downloadLinkText.textContent = previousText;
+    setPayMessage(error.message || 'Download could not be completed. Check the Cloudflare R2 setup.');
+  }
 }
 
 /* ── CLOSE ── */
@@ -1390,6 +1457,7 @@ document.querySelectorAll('.hero-cta,.pcard-btn,.cat-btn,.bundle-btn').forEach(b
 });
 
 document.querySelector('.checkout-close').addEventListener('click', closeCheckout);
+if (downloadLink) downloadLink.addEventListener('click', downloadPaidProduct);
 checkoutOverlay.addEventListener('click', e => { if (e.target === checkoutOverlay) closeCheckout(); });
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && checkoutOverlay.classList.contains('is-open')) closeCheckout();

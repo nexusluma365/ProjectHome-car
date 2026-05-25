@@ -73,6 +73,7 @@ exports.handler = async event => {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         clientSecret: paymentIntent.client_secret,
+        paymentIntentId: paymentIntent.id,
         productName: product.name
       })
     };
