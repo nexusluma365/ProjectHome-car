@@ -1,0 +1,12 @@
+{
+  "name": "remote-ai-income-skills",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static Netlify landing page with Stripe checkout for Remote AI Income Skills.",
+  "scripts": {
+    "check": "node -c netlify/functions/create-payment-intent.js"
+  },
+  "dependencies": {
+    "stripe": "^17.7.0"
+  }
+}

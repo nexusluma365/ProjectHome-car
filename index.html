@@ -511,6 +511,10 @@ body.modal-open > :not(.checkout-overlay){filter:blur(8px);transition:filter .2s
 .field label{font-size:.82rem;font-weight:850;color:var(--tx)}
 .field input{width:100%;height:54px;border:1px solid #dfe7df;border-radius:14px;padding:0 16px;font:600 .98rem/1 -apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;color:var(--tx);outline:none;background:#fff;transition:border .15s,box-shadow .15s}
 .field input:focus{border-color:rgba(60,171,60,.65);box-shadow:0 0 0 4px rgba(60,171,60,.12)}
+.stripe-card-field{min-height:54px;border:1px solid #dfe7df;border-radius:14px;padding:17px 16px;background:#fff;transition:border .15s,box-shadow .15s}
+.stripe-card-field.StripeElement--focus{border-color:rgba(60,171,60,.65);box-shadow:0 0 0 4px rgba(60,171,60,.12)}
+.checkout-error{display:none;margin:0 0 14px;padding:11px 12px;border-radius:12px;background:#fff1f1;border:1px solid #f0c1c1;color:#9b1c1c;font-size:.78rem;font-weight:800;line-height:1.35;text-align:center}
+.checkout-error.is-visible{display:block}
 .card-input{position:relative}
 .card-input input{padding-left:56px;padding-right:46px}
 .card-badge{position:absolute;left:15px;top:50%;transform:translateY(-50%);display:flex}
@@ -1089,20 +1093,8 @@ body.modal-open > :not(.checkout-overlay){filter:blur(8px);transition:filter .2s
             <input id="buyerEmail" name="buyerEmail" type="email" autocomplete="email" placeholder="you@example.com" required>
           </div>
           <div class="field full">
-            <label for="cardNumber">Card Number</label>
-            <div class="card-input">
-              <span class="card-badge" aria-hidden="true"><i></i><i></i></span>
-              <input id="cardNumber" name="cardNumber" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242" maxlength="19" required>
-              <span class="card-check" aria-hidden="true">✓</span>
-            </div>
-          </div>
-          <div class="field">
-            <label for="cardExpiry">Expiry Date</label>
-            <input id="cardExpiry" name="cardExpiry" inputmode="numeric" autocomplete="cc-exp" placeholder="MM / YY" maxlength="7" required>
-          </div>
-          <div class="field">
-            <label for="cardCvc">CVC</label>
-            <input id="cardCvc" name="cardCvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4" required>
+            <label for="cardElement">Card Information</label>
+            <div id="cardElement" class="stripe-card-field"></div>
           </div>
           <div class="field full">
             <label for="billingZip">Billing ZIP</label>
@@ -1114,8 +1106,9 @@ body.modal-open > :not(.checkout-overlay){filter:blur(8px);transition:filter .2s
           <span>Remember my name, email, and Stripe customer preference for future purchases. Full card numbers should be tokenized by Stripe and are not stored on this page.</span>
         </label>
         <div class="purchase-alert">All purchases are final. Please make sure you do not double purchase before completing payment.</div>
+        <div class="checkout-error" id="checkoutError"></div>
         <button class="pay-button" type="submit">Pay Securely</button>
-        <p class="checkout-note">Stripe-ready checkout UI. In production, verify payment first, then return the matching Cloudflare R2 file using the product bucket and file key map inside this HTML.</p>
+        <p class="checkout-note">Payments are processed securely with Stripe. Your product download appears in this popup after payment is confirmed.</p>
       </form>
       <div class="checkout-success" id="checkoutSuccess">
         <strong>Payment confirmed</strong>
@@ -1158,14 +1151,28 @@ const checkoutTotal = document.getElementById('checkoutTotal');
 const checkoutImage = document.getElementById('checkoutImage');
 const buyerName = document.getElementById('buyerName');
 const buyerEmail = document.getElementById('buyerEmail');
-const cardNumber = document.getElementById('cardNumber');
-const cardExpiry = document.getElementById('cardExpiry');
+const billingZip = document.getElementById('billingZip');
 const payButton = document.querySelector('.pay-button');
 const downloadLink = document.getElementById('downloadLink');
 const downloadLinkText = downloadLink.querySelector('span');
+const checkoutError = document.getElementById('checkoutError');
 
 const stripePublishableKey = 'pk_test_51REXciCySCiHdPyyts0MmZgs87FbnLYUjF91PvwD4XWyL1SE1g7pkC5cxSKmOsNucOmLp6pB2yPSRhHFixA1p15Y00xqtwpkEL';
 const stripe = window.Stripe ? window.Stripe(stripePublishableKey) : null;
+const stripeElements = stripe ? stripe.elements() : null;
+const cardElement = stripeElements ? stripeElements.create('card', {
+  hidePostalCode: true,
+  style: {
+    base: {
+      color: '#172017',
+      fontFamily: "-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif",
+      fontSize: '16px',
+      fontWeight: '600',
+      '::placeholder': {color: '#8a948a'}
+    },
+    invalid: {color: '#9b1c1c'}
+  }
+}) : null;
 const cloudflareDownloadBase = 'https://downloads.nexusluma.com';
 const cloudflareDownloadFallback = 'data:text/plain;charset=utf-8,Cloudflare%20download%20link%20is%20configured%20after%20Stripe%20confirmation.';
 
@@ -1220,13 +1227,17 @@ const r2ProductCatalog = {
 };
 
 const checkoutProducts = {
-  bundle: {name:'Full AI Business Builder Bundle', price:'$499.00', image:'AI%20bundle%20offer%202.webp', ...r2ProductCatalog.bundle},
-  helper: {name:'AI Business Helper', price:'$297.00', image:'AI%20Business%20Helper.webp', ...r2ProductCatalog.helper},
-  email: {name:'Email Template Builder', price:'$197.00', image:'Email%20Template%20Builder.webp', ...r2ProductCatalog.email},
-  datahunt: {name:'DataHunt Market Research', price:'$97.00', image:'DataHunt.webp', ...r2ProductCatalog.datahunt},
-  websiteVoice: {name:'Website Template', price:'$47.00', image:'Website%20template%20with%20Voice%20AI.webp', ...r2ProductCatalog.websiteVoice},
-  blueprint: {name:'Client Acquisition Blueprint', price:'$97.00', image:'AI%20bundle%20offer%202.webp', ...r2ProductCatalog.blueprint}
+  bundle: {key:'bundle', name:'Full AI Business Builder Bundle', price:'$499.00', image:'AI%20bundle%20offer%202.webp', ...r2ProductCatalog.bundle},
+  helper: {key:'helper', name:'AI Business Helper', price:'$297.00', image:'AI%20Business%20Helper.webp', ...r2ProductCatalog.helper},
+  email: {key:'email', name:'Email Template Builder', price:'$197.00', image:'Email%20Template%20Builder.webp', ...r2ProductCatalog.email},
+  datahunt: {key:'datahunt', name:'DataHunt Market Research', price:'$97.00', image:'DataHunt.webp', ...r2ProductCatalog.datahunt},
+  websiteVoice: {key:'websiteVoice', name:'Website Template', price:'$47.00', image:'Website%20template%20with%20Voice%20AI.webp', ...r2ProductCatalog.websiteVoice},
+  blueprint: {key:'blueprint', name:'Client Acquisition Blueprint', price:'$97.00', image:'AI%20bundle%20offer%202.webp', ...r2ProductCatalog.blueprint}
 };
+let activeProduct = checkoutProducts.bundle;
+let paidProduct = null;
+
+if (cardElement) cardElement.mount('#cardElement');
 
 function encodeR2Path(product) {
   return product.bucket + '/' + product.fileKey.split('/').map(encodeURIComponent).join('/');
@@ -1251,6 +1262,8 @@ function productFromButton(button) {
 
 function openCheckout(product) {
   const saved = JSON.parse(localStorage.getItem('rai_checkout_profile') || '{}');
+  activeProduct = product;
+  paidProduct = null;
   checkoutProduct.textContent = product.name;
   checkoutSummaryProduct.textContent = product.name;
   checkoutTotal.textContent = product.price;
@@ -1262,7 +1275,10 @@ function openCheckout(product) {
   buyerName.value = saved.name || buyerName.value;
   buyerEmail.value = saved.email || buyerEmail.value;
   checkoutSuccess.classList.remove('is-visible');
+  checkoutError.classList.remove('is-visible');
+  checkoutError.textContent = '';
   checkoutForm.style.display = 'block';
+  payButton.disabled = false;
   payButton.textContent = 'Pay ' + product.price + ' Securely';
   checkoutOverlay.classList.add('is-open');
   checkoutOverlay.setAttribute('aria-hidden','false');
@@ -1291,17 +1307,44 @@ document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && checkoutOverlay.classList.contains('is-open')) closeCheckout();
 });
 
-cardNumber.addEventListener('input', event => {
-  const digits = event.target.value.replace(/\D/g,'').slice(0,16);
-  event.target.value = digits.replace(/(\d{4})(?=\d)/g,'$1 ');
-});
-cardExpiry.addEventListener('input', event => {
-  const digits = event.target.value.replace(/\D/g,'').slice(0,4);
-  event.target.value = digits.length > 2 ? digits.slice(0,2) + ' / ' + digits.slice(2) : digits;
+function showCheckoutError(message) {
+  checkoutError.textContent = message;
+  checkoutError.classList.add('is-visible');
+}
+
+downloadLink.addEventListener('click', async event => {
+  event.preventDefault();
+  if (!paidProduct) {
+    showCheckoutError('Please complete payment before downloading.');
+    return;
+  }
+  downloadLinkText.textContent = 'Preparing download...';
+  try {
+    const response = await fetch(downloadLink.href, {mode:'cors'});
+    if (!response.ok) throw new Error('Download request failed.');
+    const blob = await response.blob();
+    const objectUrl = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = objectUrl;
+    anchor.download = paidProduct.fileName;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+    downloadLinkText.textContent = 'Download ' + paidProduct.name;
+  } catch (error) {
+    downloadLinkText.textContent = 'Download ' + paidProduct.name;
+    showCheckoutError('The payment was confirmed, but the download could not start in-page. Check the Cloudflare R2 public domain or CORS settings for this file.');
+  }
 });
 
-checkoutForm.addEventListener('submit', event => {
+checkoutForm.addEventListener('submit', async event => {
   event.preventDefault();
+  checkoutError.classList.remove('is-visible');
+  if (!stripe || !cardElement) {
+    showCheckoutError('Stripe did not load. Please refresh and try again.');
+    return;
+  }
   if (document.getElementById('saveCheckout').checked) {
     localStorage.setItem('rai_checkout_profile', JSON.stringify({
       name: buyerName.value.trim(),
@@ -1311,11 +1354,41 @@ checkoutForm.addEventListener('submit', event => {
   }
   payButton.textContent = 'Confirming with Stripe...';
   payButton.disabled = true;
-  setTimeout(() => {
-    payButton.disabled = false;
+  try {
+    const intentResponse = await fetch('/.netlify/functions/create-payment-intent', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        productKey: activeProduct.key,
+        name: buyerName.value.trim(),
+        email: buyerEmail.value.trim()
+      })
+    });
+    const intent = await intentResponse.json();
+    if (!intentResponse.ok || !intent.clientSecret) {
+      throw new Error(intent.error || 'Unable to start payment.');
+    }
+    const result = await stripe.confirmCardPayment(intent.clientSecret, {
+      payment_method: {
+        card: cardElement,
+        billing_details: {
+          name: buyerName.value.trim(),
+          email: buyerEmail.value.trim(),
+          address: {postal_code: billingZip.value.trim()}
+        }
+      },
+      receipt_email: buyerEmail.value.trim()
+    });
+    if (result.error) throw new Error(result.error.message || 'Payment was not confirmed.');
+    paidProduct = activeProduct;
     checkoutForm.style.display = 'none';
     checkoutSuccess.classList.add('is-visible');
-  }, 900);
+  } catch (error) {
+    showCheckoutError(error.message || 'Payment could not be completed. Please try again.');
+  } finally {
+    payButton.disabled = false;
+    payButton.textContent = 'Pay ' + activeProduct.price + ' Securely';
+  }
 });
 </script>
 </body>
