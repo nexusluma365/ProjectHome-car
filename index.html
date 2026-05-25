@@ -640,7 +640,7 @@ body.modal-open > :not(.checkout-overlay){filter:blur(8px);transition:filter .2s
     </div>
 
     <div class="hero-actions">
-      <a class="hero-cta" href="#bundle">Unlock The Full AI Bundle</a>
+      <a class="hero-cta" href="#bundle" data-product="bundle">Unlock The Full AI Bundle</a>
       <div class="hero-note">Templates · Training videos · Manuals · Prompts · Scripts · Instant access</div>
     </div>
   </div>
@@ -731,8 +731,8 @@ body.modal-open > :not(.checkout-overlay){filter:blur(8px);transition:filter .2s
       <div class="pcard-body">
         <div class="pcard-name">AI Business Helper</div>
         <div class="pcard-price"><span class="cur">$297.00</span></div>
-        <div class="pcard-note">Assistant template for business support</div>
-        <a class="pcard-btn" href="#bundle">Buy AI Helper</a>
+        <div class="pcard-note">Downloads as: AI Assistant.zip</div>
+        <a class="pcard-btn" href="#bundle" data-product="helper">Buy AI Business Helper</a>
       </div>
     </div>
     <!-- Card 2 -->
@@ -744,8 +744,8 @@ body.modal-open > :not(.checkout-overlay){filter:blur(8px);transition:filter .2s
       <div class="pcard-body">
         <div class="pcard-name">Email Template Builder</div>
         <div class="pcard-price"><span class="cur">$197.00</span></div>
-        <div class="pcard-note">Build reusable business email assets</div>
-        <a class="pcard-btn" href="#bundle">Buy Email Builder</a>
+        <div class="pcard-note">Downloads as: Email Builder.zip</div>
+        <a class="pcard-btn" href="#bundle" data-product="email">Buy Email Template</a>
       </div>
     </div>
     <!-- Card 3 -->
@@ -756,8 +756,8 @@ body.modal-open > :not(.checkout-overlay){filter:blur(8px);transition:filter .2s
       <div class="pcard-body">
         <div class="pcard-name">DataHunt Market Research</div>
         <div class="pcard-price"><span class="cur">$97.00</span></div>
-        <div class="pcard-note">Research markets and business opportunities</div>
-        <a class="pcard-btn" href="#bundle">Buy DataHunt</a>
+        <div class="pcard-note">Downloads as: DataHunt.zip</div>
+        <a class="pcard-btn" href="#bundle" data-product="datahunt">Buy DataHunt</a>
       </div>
     </div>
     <!-- Card 4 Sale -->
@@ -767,13 +767,13 @@ body.modal-open > :not(.checkout-overlay){filter:blur(8px);transition:filter .2s
         <img class="pcard-product-img" src="Website%20template%20with%20Voice%20AI.webp" alt="Website Template with Voice AI product preview" loading="lazy" decoding="async">
       </div>
       <div class="pcard-body">
-        <div class="pcard-name">Website Template With Voice AI</div>
+        <div class="pcard-name">Website Template</div>
         <div class="pcard-price">
           <span class="cur">$47.00</span>
           <span class="old">$197.00</span>
         </div>
-        <div class="pcard-note">Website foundation with Voice AI positioning</div>
-        <a class="pcard-btn" href="#bundle">Buy Website Template</a>
+        <div class="pcard-note">Downloads as: Website with Voice AI.zip</div>
+        <a class="pcard-btn" href="#bundle" data-product="websiteVoice">Buy Website Template</a>
       </div>
     </div>
   </div>
@@ -797,14 +797,14 @@ body.modal-open > :not(.checkout-overlay){filter:blur(8px);transition:filter .2s
       <div class="cat-bg"><svg class="cat-icon" aria-hidden="true"><use href="#icon-globe"></use></svg></div>
       <div class="cat-content">
         <h3>Website Templates</h3>
-        <a class="cat-btn" href="#bundle">View Templates</a>
+        <a class="cat-btn" href="#bundle" data-product="websiteVoice">View Templates</a>
       </div>
     </div>
     <div class="cat-card">
       <div class="cat-bg"><svg class="cat-icon" aria-hidden="true"><use href="#icon-target"></use></svg></div>
       <div class="cat-content">
         <h3>Client Acquisition Blueprint</h3>
-        <a class="cat-btn" href="#bundle">View Blueprint</a>
+        <a class="cat-btn" href="#bundle" data-product="blueprint">View Blueprint</a>
       </div>
     </div>
   </div>
@@ -1015,7 +1015,7 @@ body.modal-open > :not(.checkout-overlay){filter:blur(8px);transition:filter .2s
       <div class="price-note">One-time payment · Instant access · Beginner-friendly</div>
     </div>
     <div class="price-split">Want a smaller start? Buy one system today, or unlock the full bundle for the best value.</div>
-    <a class="bundle-btn" href="mailto:support@nexusluma.com?subject=Unlock%20The%20Full%20AI%20Bundle">Unlock The Full Bundle</a>
+    <a class="bundle-btn" href="#bundle" data-product="bundle">Unlock The Full Bundle</a>
     <div class="guarantees">
       <div class="guar-it">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3CAB3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -1115,7 +1115,7 @@ body.modal-open > :not(.checkout-overlay){filter:blur(8px);transition:filter .2s
         </label>
         <div class="purchase-alert">All purchases are final. Please make sure you do not double purchase before completing payment.</div>
         <button class="pay-button" type="submit">Pay Securely</button>
-        <p class="checkout-note">Demo checkout UI. To charge cards in production, connect this form to Stripe Elements or Stripe Checkout through a secure backend PaymentIntent.</p>
+        <p class="checkout-note">Stripe-ready checkout UI. In production, verify payment first, then return the matching Cloudflare R2 file using the product bucket and file key map inside this HTML.</p>
       </form>
       <div class="checkout-success" id="checkoutSuccess">
         <strong>Payment confirmed</strong>
@@ -1126,12 +1126,13 @@ body.modal-open > :not(.checkout-overlay){filter:blur(8px);transition:filter .2s
             <span>Download Bundle</span>
           </a>
         </div>
-        <span class="download-meta">Secure Cloudflare delivery</span>
+        <span class="download-meta">Cloudflare R2 delivery</span>
       </div>
     </section>
   </div>
 </div>
 
+<script src="https://js.stripe.com/v3/"></script>
 <script>
 const heroVideoWrap = document.querySelector('.hero-vsl');
 const heroVideo = document.querySelector('.hero-video');
@@ -1163,24 +1164,82 @@ const payButton = document.querySelector('.pay-button');
 const downloadLink = document.getElementById('downloadLink');
 const downloadLinkText = downloadLink.querySelector('span');
 
+const stripePublishableKey = 'pk_test_51REXciCySCiHdPyyts0MmZgs87FbnLYUjF91PvwD4XWyL1SE1g7pkC5cxSKmOsNucOmLp6pB2yPSRhHFixA1p15Y00xqtwpkEL';
+const stripe = window.Stripe ? window.Stripe(stripePublishableKey) : null;
 const cloudflareDownloadBase = 'https://downloads.nexusluma.com';
 const cloudflareDownloadFallback = 'data:text/plain;charset=utf-8,Cloudflare%20download%20link%20is%20configured%20after%20Stripe%20confirmation.';
 
-const checkoutProducts = {
-  bundle: {name:'Full AI Business Builder Bundle', price:'$499.00', image:'AI%20bundle%20offer%202.webp', cloudflarePath:'bundle/Remote%20AI%20Income%20Skills%20Bundle.zip', fileName:'Remote AI Income Skills Bundle.zip'},
-  helper: {name:'AI Business Helper', price:'$297.00', image:'AI%20Business%20Helper.webp', cloudflarePath:'template2/AI%20Assistant.zip', fileName:'AI Assistant.zip'},
-  email: {name:'Email Template Builder', price:'$197.00', image:'Email%20Template%20Builder.webp', cloudflarePath:'websitetemplate/Email%20Builder.zip', fileName:'Email Builder.zip'},
-  datahunt: {name:'DataHunt Market Research', price:'$97.00', image:'DataHunt.webp', cloudflarePath:'websitetemplate/DataHunt.zip', fileName:'DataHunt.zip'},
-  websiteVoice: {name:'Website Template With Voice AI', price:'$47.00', image:'Website%20template%20with%20Voice%20AI.webp', cloudflarePath:'template2/Website%20with%20Voice%20AI.zip', fileName:'Website with Voice AI.zip'},
-  blueprint: {name:'Client Acquisition Blueprint', price:'$97.00', image:'AI%20bundle%20offer%202.webp', cloudflarePath:'bundle/Client%20Acquisition%20Blueprint.zip', fileName:'Client Acquisition Blueprint.zip'}
+/*
+  Cloudflare R2 product map
+  ------------------------------------------------------------
+  This organizes exactly where each paid product should be pulled from.
+  The bucket names and file keys match the screenshots you uploaded.
+
+  Full Bundle                -> bucket: aibundlekit     -> Ai offer products.zip
+  AI Business Helper          -> bucket: template2       -> AI Assistant.zip
+  Email Template Builder      -> bucket: websitetemplate -> Email Builder.zip
+  DataHunt Market Research    -> bucket: websitetemplate -> DataHunt.zip
+  Website Template            -> bucket: template2       -> Website with Voice AI.zip
+
+  Important: browser-only HTML cannot securely read Netlify environment variables
+  or private R2 credentials. In production, your Stripe webhook or Netlify function
+  should verify payment first, then create/return the signed download URL using
+  the matching bucket + fileKey below.
+*/
+const r2ProductCatalog = {
+  bundle: {
+    bucket: 'aibundlekit',
+    fileKey: 'Ai offer products.zip',
+    fileName: 'Ai offer products.zip'
+  },
+  helper: {
+    bucket: 'template2',
+    fileKey: 'AI Assistant.zip',
+    fileName: 'AI Assistant.zip'
+  },
+  email: {
+    bucket: 'websitetemplate',
+    fileKey: 'Email Builder.zip',
+    fileName: 'Email Builder.zip'
+  },
+  datahunt: {
+    bucket: 'websitetemplate',
+    fileKey: 'DataHunt.zip',
+    fileName: 'DataHunt.zip'
+  },
+  websiteVoice: {
+    bucket: 'template2',
+    fileKey: 'Website with Voice AI.zip',
+    fileName: 'Website with Voice AI.zip'
+  },
+  blueprint: {
+    bucket: 'aibundlekit',
+    fileKey: 'Ai offer products.zip',
+    fileName: 'Ai offer products.zip'
+  }
 };
 
+const checkoutProducts = {
+  bundle: {name:'Full AI Business Builder Bundle', price:'$499.00', image:'AI%20bundle%20offer%202.webp', ...r2ProductCatalog.bundle},
+  helper: {name:'AI Business Helper', price:'$297.00', image:'AI%20Business%20Helper.webp', ...r2ProductCatalog.helper},
+  email: {name:'Email Template Builder', price:'$197.00', image:'Email%20Template%20Builder.webp', ...r2ProductCatalog.email},
+  datahunt: {name:'DataHunt Market Research', price:'$97.00', image:'DataHunt.webp', ...r2ProductCatalog.datahunt},
+  websiteVoice: {name:'Website Template', price:'$47.00', image:'Website%20template%20with%20Voice%20AI.webp', ...r2ProductCatalog.websiteVoice},
+  blueprint: {name:'Client Acquisition Blueprint', price:'$97.00', image:'AI%20bundle%20offer%202.webp', ...r2ProductCatalog.blueprint}
+};
+
+function encodeR2Path(product) {
+  return product.bucket + '/' + product.fileKey.split('/').map(encodeURIComponent).join('/');
+}
+
 function cloudflareDownloadUrl(product) {
-  if (!product.cloudflarePath) return cloudflareDownloadFallback;
-  return cloudflareDownloadBase.replace(/\/$/, '') + '/' + product.cloudflarePath;
+  if (!product.bucket || !product.fileKey) return cloudflareDownloadFallback;
+  return cloudflareDownloadBase.replace(/\/$/, '') + '/' + encodeR2Path(product);
 }
 
 function productFromButton(button) {
+  const productKey = button.dataset.product;
+  if (productKey && checkoutProducts[productKey]) return checkoutProducts[productKey];
   const text = button.textContent.toLowerCase();
   if (text.includes('helper')) return checkoutProducts.helper;
   if (text.includes('email')) return checkoutProducts.email;
