@@ -1103,7 +1103,6 @@ body.modal-open > :not(.checkout-overlay){filter:blur(8px);transition:filter .2s
   </div>
 </div>
 
-<script src="https://js.stripe.com/v3/"></script>
 <script>
 /* ── VIDEO ── */
 const heroVideoWrap = document.querySelector('.hero-vsl');
@@ -1157,7 +1156,8 @@ const checkoutProducts = {
 
 /* ── STATE ── */
 const STRIPE_KEY = 'pk_test_51REXciCySCiHdPyyts0MmZgs87FbnLYUjF91PvwD4XWyL1SE1g7pkC5cxSKmOsNucOmLp6pB2yPSRhHFixA1p15Y00xqtwpkEL';
-const stripe = window.Stripe ? window.Stripe(STRIPE_KEY) : null;
+let stripe = null;
+let stripeScriptPromise = null;
 let stripeElements = null;
 let activePaymentClientSecret = '';
 let activePaymentIntentId = '';
@@ -1218,6 +1218,27 @@ function setPaymentLoading(message) {
   paymentElementHost.innerHTML = '<div class="payment-loading">' + message + '</div>';
 }
 
+function loadStripeJs() {
+  if (window.Stripe) {
+    stripe = stripe || window.Stripe(STRIPE_KEY);
+    return Promise.resolve(stripe);
+  }
+  if (!stripeScriptPromise) {
+    stripeScriptPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://js.stripe.com/v3/';
+      script.async = true;
+      script.onload = () => {
+        stripe = window.Stripe ? window.Stripe(STRIPE_KEY) : null;
+        stripe ? resolve(stripe) : reject(new Error('Stripe could not initialize.'));
+      };
+      script.onerror = () => reject(new Error('Stripe could not load. Please check your connection and try again.'));
+      document.head.appendChild(script);
+    });
+  }
+  return stripeScriptPromise;
+}
+
 /* ── OPEN CHECKOUT — creates intent + mounts Payment Element ── */
 async function openCheckout(product) {
   const requestId = ++checkoutRequestId;
@@ -1250,14 +1271,10 @@ async function openCheckout(product) {
   checkoutOverlay.setAttribute('aria-hidden', 'false');
   document.body.classList.add('modal-open');
 
-  if (!stripe) {
-    setPayBusy(false, 'Pay ' + product.price + ' Securely');
-    setPayMessage('Stripe did not load. Please refresh and try again.');
-    return;
-  }
-
   try {
     await new Promise(resolve => requestAnimationFrame(resolve));
+    await loadStripeJs();
+    if (requestId !== checkoutRequestId) return;
 
     /* create payment intent */
     const res = await fetch('/.netlify/functions/create-payment-intent', {

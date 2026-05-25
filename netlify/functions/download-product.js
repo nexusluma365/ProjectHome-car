@@ -7,42 +7,50 @@ const buckets = {
   bundle: process.env.R2_BUCKET3 || process.env.CLOUDFLARE_R2_BUCKET_1 || 'aibundlekit'
 };
 
+const fileKeys = {
+  bundle: process.env.R2_FILE_KEY_BUNDLE || 'Ai offer products.zip',
+  helper: process.env.R2_FILE_KEY_AI_ASSISTANT || 'AI Assistant.zip',
+  email: process.env.R2_FILE_KEY_EMAIL_BUILDER || 'Email Builder.zip',
+  datahunt: process.env.R2_FILE_KEY_DATAHUNT || 'DataHunt.zip',
+  websiteVoice: process.env.R2_FILE_KEY_WEBSITE_VOICE || 'Website with Voice AI.zip'
+};
+
 const productCatalog = {
   bundle: {
     name: 'Full AI Business Builder Bundle',
     bucket: buckets.bundle,
-    fileKey: 'Ai offer products.zip',
-    fileName: 'Ai offer products.zip'
+    fileKey: fileKeys.bundle,
+    fileName: fileKeys.bundle
   },
   helper: {
     name: 'AI Business Helper',
     bucket: buckets.template,
-    fileKey: 'AI Assistant.zip',
-    fileName: 'AI Assistant.zip'
+    fileKey: fileKeys.helper,
+    fileName: fileKeys.helper
   },
   email: {
     name: 'Email Template Builder',
     bucket: buckets.website,
-    fileKey: 'Email Builder.zip',
-    fileName: 'Email Builder.zip'
+    fileKey: fileKeys.email,
+    fileName: fileKeys.email
   },
   datahunt: {
     name: 'DataHunt Market Research',
     bucket: buckets.website,
-    fileKey: 'DataHunt.zip',
-    fileName: 'DataHunt.zip'
+    fileKey: fileKeys.datahunt,
+    fileName: fileKeys.datahunt
   },
   websiteVoice: {
     name: 'Website Template',
     bucket: buckets.template,
-    fileKey: 'Website with Voice AI.zip',
-    fileName: 'Website with Voice AI.zip'
+    fileKey: fileKeys.websiteVoice,
+    fileName: fileKeys.websiteVoice
   },
   blueprint: {
     name: 'Client Acquisition Blueprint',
     bucket: buckets.bundle,
-    fileKey: 'Ai offer products.zip',
-    fileName: 'Ai offer products.zip'
+    fileKey: fileKeys.bundle,
+    fileName: fileKeys.bundle
   }
 };
 
@@ -55,12 +63,17 @@ function json(statusCode, body) {
 }
 
 function getR2Client() {
-  const accountId = process.env.CLOUDFLARE_R2_ACCOUNT_ID;
-  const accessKeyId = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID;
-  const secretAccessKey = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY;
+  const accountId = process.env.CLOUDFLARE_R2_ACCOUNT_ID || process.env.R2_ACCOUNT_ID || process.env.CF_R2_ACCOUNT_ID;
+  const accessKeyId = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID || process.env.R2_ACCESS_KEY_ID || process.env.R2_ACCESS_KEY;
+  const secretAccessKey = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY || process.env.R2_SECRET_ACCESS_KEY || process.env.R2_SECRET_KEY;
 
-  if (!accountId || !accessKeyId || !secretAccessKey) {
-    throw new Error('Cloudflare R2 environment variables are not configured on Netlify.');
+  const missing = [];
+  if (!accountId) missing.push('CLOUDFLARE_R2_ACCOUNT_ID or R2_ACCOUNT_ID');
+  if (!accessKeyId) missing.push('CLOUDFLARE_R2_ACCESS_KEY_ID or R2_ACCESS_KEY_ID');
+  if (!secretAccessKey) missing.push('CLOUDFLARE_R2_SECRET_ACCESS_KEY or R2_SECRET_ACCESS_KEY');
+
+  if (missing.length) {
+    throw new Error('Missing Netlify environment variables: ' + missing.join(', ') + '. Save them, then trigger a new deploy.');
   }
 
   return new S3Client({
