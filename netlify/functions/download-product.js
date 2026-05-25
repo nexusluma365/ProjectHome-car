@@ -1,40 +1,46 @@
 const Stripe = require('stripe');
 const {S3Client, GetObjectCommand} = require('@aws-sdk/client-s3');
 
+const buckets = {
+  bundle: process.env.CLOUDFLARE_R2_BUCKET_1 || 'aibundlekit',
+  template: process.env.CLOUDFLARE_R2_BUCKET_2 || 'template2',
+  website: process.env.CLOUDFLARE_R2_BUCKET_3 || 'websitetemplate'
+};
+
 const productCatalog = {
   bundle: {
     name: 'Full AI Business Builder Bundle',
-    bucket: 'aibundlekit',
+    bucket: buckets.bundle,
     fileKey: 'Ai offer products.zip',
     fileName: 'Ai offer products.zip'
   },
   helper: {
     name: 'AI Business Helper',
-    bucket: 'template2',
+    bucket: buckets.template,
     fileKey: 'AI Assistant.zip',
     fileName: 'AI Assistant.zip'
   },
   email: {
     name: 'Email Template Builder',
-    bucket: 'websitetemplate',
+    bucket: buckets.website,
     fileKey: 'Email Builder.zip',
     fileName: 'Email Builder.zip'
   },
   datahunt: {
     name: 'DataHunt Market Research',
-    bucket: 'websitetemplate',
+    bucket: buckets.website,
     fileKey: 'DataHunt.zip',
     fileName: 'DataHunt.zip'
   },
   websiteVoice: {
     name: 'Website Template',
-    bucket: 'template2',
+    bucket: buckets.template,
     fileKey: 'Website with Voice AI.zip',
     fileName: 'Website with Voice AI.zip'
   },
   blueprint: {
     name: 'Client Acquisition Blueprint',
-    bucket: 'aibundlekit',
+    bucket: buckets.bundle,
     fileKey: 'Ai offer products.zip',
     fileName: 'Ai offer products.zip'
   }
