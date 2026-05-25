@@ -1,9 +1,9 @@
 const Stripe = require('stripe');
 
 const buckets = {
-  bundle: process.env.CLOUDFLARE_R2_BUCKET_1 || 'aibundlekit',
-  template: process.env.CLOUDFLARE_R2_BUCKET_2 || 'template2',
-  website: process.env.CLOUDFLARE_R2_BUCKET_3 || 'websitetemplate'
+  template: process.env.R2_BUCKET || process.env.CLOUDFLARE_R2_BUCKET_2 || 'template2',
+  website: process.env.R2_BUCKET2 || process.env.CLOUDFLARE_R2_BUCKET_3 || 'websitetemplate',
+  bundle: process.env.R2_BUCKET3 || process.env.CLOUDFLARE_R2_BUCKET_1 || 'aibundlekit'
 };
 
 const productCatalog = {
