@@ -55,10 +55,31 @@ exports.handler = async event => {
     }
 
     const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+    let customerId = '';
+
+    if (payload.customerId && /^cus_/.test(payload.customerId)) {
+      try {
+        const customer = await stripe.customers.retrieve(payload.customerId);
+        if (!customer.deleted) customerId = customer.id;
+      } catch (error) {}
+    }
+
+    if (!customerId) {
+      const customer = await stripe.customers.create({
+        email: payload.email || undefined,
+        metadata: {
+          checkoutSessionId: payload.checkoutSessionId || ''
+        }
+      });
+      customerId = customer.id;
+    }
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount: product.amount,
       currency: 'usd',
-      automatic_payment_methods: {enabled: true},
+      customer: customerId,
+      payment_method_types: ['card'],
+      setup_future_usage: 'off_session',
       receipt_email: payload.email || undefined,
       metadata: {
         productKey: payload.productKey,
@@ -74,6 +95,7 @@ exports.handler = async event => {
       body: JSON.stringify({
         clientSecret: paymentIntent.client_secret,
         paymentIntentId: paymentIntent.id,
+        customerId,
         productName: product.name
       })
     };

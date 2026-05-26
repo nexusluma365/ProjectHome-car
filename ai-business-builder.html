@@ -59,7 +59,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text'
 .brand-strip{height:92px;background:#050505;display:flex;align-items:center;justify-content:center;border-bottom:none;box-shadow:0 5px 18px rgba(0,0,0,.24)}
 .brand-strip strong{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif;font-size:2.2rem;line-height:1;font-weight:850;letter-spacing:-.035em;color:#fff}
 .brand-strip span{color:var(--g);margin-left:.26em}
-.hero{background:linear-gradient(180deg,#fff 0%,#f7fbf7 100%);min-height:100vh;overflow:hidden;padding:48px 28px 76px;text-align:center}
+.hero{background:linear-gradient(180deg,#fff 0%,#f7fbf7 100%);overflow:hidden;padding:48px 28px 64px;text-align:center}
 .hero-inner{max-width:1180px;margin:0 auto}
 .hero-kicker{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;font-size:.92rem;line-height:1.2;font-weight:700;letter-spacing:.035em;color:var(--tx);margin-bottom:8px}
 .hero-subkicker{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;font-size:.95rem;line-height:1.35;font-weight:700;letter-spacing:-.01em;color:var(--g);margin-bottom:26px}
@@ -70,13 +70,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text'
 .hero-pill-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;max-width:970px;margin:0 auto 28px}
 .hero-pill{min-height:58px;border:1px solid rgba(60,171,60,.38);border-radius:999px;background:#fff;color:var(--tx);display:flex;align-items:center;justify-content:center;text-align:center;gap:10px;padding:10px 18px;font-family:'Oswald',sans-serif;font-size:1rem;font-weight:700;line-height:1.05;text-transform:uppercase;letter-spacing:.035em;box-shadow:0 8px 24px rgba(35,92,35,.08)}
 .hero-pill svg{width:18px;height:18px;color:var(--g);flex:0 0 auto}
-.hero-video-wrap{display:flex;justify-content:center;padding-top:2px}
-.hero-vsl{position:relative;width:min(870px,100%);aspect-ratio:16/9;background:#f1f5f1;border-radius:18px;overflow:hidden;cursor:pointer;border:1px solid var(--bd);box-shadow:0 22px 58px rgba(35,92,35,.15)}
-.hero-vsl::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#eef4ee,#dfe8df 42%,#f8fbf8);opacity:.95}
-.hero-vsl::after{content:'';position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.15),rgba(255,255,255,.25)),radial-gradient(circle at 45% 38%,rgba(60,171,60,.18),transparent 25%),linear-gradient(72deg,transparent 20%,rgba(60,171,60,.42) 20.5%,rgba(60,171,60,.42) 22%,transparent 22.5%),linear-gradient(108deg,transparent 76%,rgba(60,171,60,.42) 76.5%,rgba(60,171,60,.42) 78%,transparent 78.5%)}
-.hero-vsl.has-video::before,.hero-vsl.has-video::after{display:none}
-.hero-video{display:block;width:100%;height:100%;object-fit:cover;background:#000}
-.video-sound-badge{position:absolute;right:14px;bottom:14px;z-index:4;display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:0 14px;border-radius:999px;background:rgba(0,0,0,.72);color:#fff;font-size:.78rem;font-weight:900;backdrop-filter:blur(10px);box-shadow:0 10px 24px rgba(0,0,0,.22)}
 .btn-green{display:inline-flex;align-items:center;justify-content:center;text-align:center;background:var(--g);color:#fff;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;font-weight:800;font-size:.9rem;padding:13px 30px;border-radius:999px;text-decoration:none;transition:transform .15s,background .15s,box-shadow .15s;border:none;cursor:pointer;margin-left:auto;margin-right:auto;box-shadow:0 10px 26px rgba(60,171,60,.22)}
 .btn-green:hover{background:var(--gd);transform:translateY(-1px);box-shadow:0 14px 32px rgba(60,171,60,.28)}
 
@@ -120,7 +113,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text'
 .vsl-bar.bot{bottom:0}
 .vsl-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:3}
 .play-ring{width:72px;height:72px;background:var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform .2s;box-shadow:0 4px 20px rgba(60,171,60,.35)}
-.vsl-frame:hover .play-ring,.hero-vsl:hover .play-ring{transform:scale(1.08)}
+.vsl-frame:hover .play-ring{transform:scale(1.08)}
 .play-ring svg{width:26px;height:26px;fill:#fff;margin-left:4px}
 .vsl-cap{color:var(--tx);font-size:.82rem;font-weight:700}
 .table-icon,.cat-icon{width:22px;height:22px;color:var(--g);vertical-align:middle;margin-right:8px}
@@ -327,7 +320,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text'
 @media(max-width:760px){.bundle-choice{grid-template-columns:1fr}.products-grid{grid-template-columns:1fr}.products-section{padding:42px 18px}.pcard-img{height:150px}}
 
 /* Premium Apple-style polish */
-.hero-vsl,.pcard,.cat-card,.testimonial-poster,.val-table{backdrop-filter:saturate(180%) blur(18px)}
+.pcard,.cat-card,.testimonial-poster,.val-table{backdrop-filter:saturate(180%) blur(18px)}
 .pcard,.cat-card{border-radius:18px;box-shadow:0 12px 34px rgba(20,45,20,.06)}
 .pcard-btn,.bundle-btn,.cat-btn{box-shadow:0 10px 24px rgba(60,171,60,.18);transition:transform .15s,background .15s,box-shadow .15s}
 .pcard-btn:hover,.bundle-btn:hover,.cat-btn:hover{transform:translateY(-1px);box-shadow:0 14px 32px rgba(60,171,60,.25)}
@@ -342,7 +335,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text'
 .hero-copy{font-size:1.04rem;line-height:1.58;max-width:820px;margin-bottom:20px}
 .hero-pill-row{max-width:900px;gap:10px;margin-bottom:22px}
 .hero-pill{min-height:50px;padding:8px 14px;font-size:.9rem}
-.hero-vsl{width:min(760px,100%);border-radius:14px;box-shadow:0 18px 42px rgba(35,92,35,.14)}
 .vsl-bar{height:30px}
 .play-ring{width:62px;height:62px}
 .hero-actions{display:flex;flex-direction:column;align-items:center;gap:10px;margin:22px auto 0}
@@ -415,7 +407,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text'
   .hero-copy{font-size:1rem;line-height:1.55;margin-bottom:18px}
   .hero-pill-row{grid-template-columns:1fr}
   .hero-pill{border-radius:16px;min-height:48px}
-  .hero-vsl{border-radius:12px;box-shadow:0 12px 30px rgba(35,92,35,.12)}
   .vsl-bar{height:22px}
   .play-ring{width:54px;height:54px}
   .hero-cta,.btn-green,.pcard-btn,.cat-btn,.bundle-btn{width:100%;max-width:360px;min-width:0}
@@ -462,11 +453,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text'
   .pain-kicker{font-size:.78rem}
   .pain-title{font-size:2.35rem;line-height:1.05}
   .pain-copy{font-size:.98rem;margin-bottom:30px}
-  .pain-diamonds{display:flex;flex-direction:column;gap:18px}
-  .pain-diamond,.pain-diamond:nth-child(n){grid-column:auto;width:min(260px,72vw);height:min(260px,72vw);margin:0 auto;transform:rotate(45deg)}
-  .pain-card{padding:28px}
+  .pain-diamonds{display:grid;grid-template-columns:1fr;gap:14px;max-width:420px}
+  .pain-diamond,.pain-diamond:nth-child(n){grid-column:auto;width:100%;height:auto;min-height:0;margin:0;transform:none;border-radius:18px}
+  .pain-card{position:relative;inset:auto;transform:none;padding:22px 20px}
+  .pain-x{width:30px;height:30px;font-size:1.35rem;margin-bottom:12px}
   .pain-card h3{font-size:1.08rem}
-  .pain-card p{font-size:.82rem}
+  .pain-card p{font-size:.86rem;max-width:310px}
   .pain-callout{margin-top:34px;padding:18px 16px;font-size:1.18rem}
   .kit-section{padding:42px 16px}
   .kit-offer-image{width:100%;border-radius:0;margin-bottom:20px;box-shadow:none;background:transparent}
@@ -482,25 +474,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text'
 
 /* Checkout modal */
 body.modal-open{overflow:hidden}
-.checkout-overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:28px;background:rgba(4,8,6,.62);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .16s ease,visibility 0s linear .16s;contain:layout style paint}
+.checkout-overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:28px;background:rgba(4,8,6,.68);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .16s ease,visibility 0s linear .16s;contain:layout style paint}
 .checkout-overlay.is-open{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .16s ease}
-.checkout-modal{position:relative;width:min(1080px,100%);max-height:92vh;overflow:auto;border-radius:24px;background:#fff;box-shadow:0 24px 58px rgba(0,0,0,.28);display:grid;grid-template-columns:.9fr 1.1fr;transform:translate3d(0,10px,0) scale(.985);opacity:.98;transition:transform .18s ease,opacity .18s ease;will-change:transform;contain:layout paint}
+.checkout-modal{position:relative;width:min(1040px,100%);max-height:92vh;overflow:auto;border-radius:22px;background:#fff;box-shadow:0 24px 58px rgba(0,0,0,.28);display:grid;grid-template-columns:.82fr 1.18fr;transform:translate3d(0,10px,0) scale(.985);opacity:.98;transition:transform .18s ease,opacity .18s ease;will-change:transform;contain:layout paint}
 .checkout-overlay.is-open .checkout-modal{transform:translate3d(0,0,0) scale(1);opacity:1}
 .checkout-close{position:absolute;right:18px;top:16px;width:38px;height:38px;border:0;background:#fff;color:#111;border-radius:50%;font-size:1.8rem;line-height:1;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.12);z-index:2}
-.checkout-product{padding:42px;background:linear-gradient(180deg,#f7fbf7 0%,#eef8ee 100%);border-right:1px solid var(--bd);display:flex;flex-direction:column;gap:22px}
+.checkout-product{padding:34px;background:linear-gradient(180deg,#f8fcf8 0%,#eef8ee 100%);border-right:1px solid var(--bd);display:flex;flex-direction:column;gap:18px}
 .checkout-brand{display:flex;align-items:center;gap:12px;font-weight:900;color:var(--tx);letter-spacing:-.035em;font-size:1.25rem}
 .checkout-brand-mark{width:42px;height:42px;border-radius:13px;background:var(--g);display:grid;place-items:center;color:#fff;box-shadow:0 12px 26px rgba(60,171,60,.28)}
-.checkout-product-art{min-height:260px;border-radius:24px;background:#fff;box-shadow:0 14px 32px rgba(20,45,20,.1);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.checkout-product-art{min-height:220px;border-radius:20px;background:#fff;box-shadow:0 12px 28px rgba(20,45,20,.09);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
 .checkout-product-art::before{content:'';position:absolute;inset:18px;border-radius:20px;background:linear-gradient(135deg,rgba(60,171,60,.12),rgba(255,255,255,.85));border:1px solid rgba(60,171,60,.18)}
 .checkout-product-art svg{position:relative;width:150px;height:150px;color:var(--g);filter:drop-shadow(0 14px 24px rgba(60,171,60,.22))}
-.checkout-product-image{position:relative;max-width:88%;max-height:220px;width:auto;height:auto;object-fit:contain}
+.checkout-product-image{position:relative;max-width:88%;max-height:188px;width:auto;height:auto;object-fit:contain}
 .checkout-product h3{font-size:1.7rem;line-height:1.05;letter-spacing:-.045em;color:var(--tx)}
 .checkout-product p{color:var(--mu);line-height:1.55;font-size:.95rem}
 .checkout-summary{display:grid;gap:10px;margin-top:auto}
 .summary-row{display:flex;align-items:center;justify-content:space-between;color:var(--mu);font-size:.92rem}
 .summary-row strong{color:var(--tx)}
 .summary-total{border-top:1px dashed #c8d6c8;padding-top:14px;margin-top:4px;font-size:1.35rem;font-weight:900;color:var(--tx)}
-.checkout-form-panel{padding:42px 46px 38px}
+.checkout-form-panel{padding:38px 42px 34px}
 .checkout-kicker{font-size:.75rem;text-transform:uppercase;letter-spacing:.14em;color:var(--g);font-weight:900;margin-bottom:8px}
 .checkout-form-panel h2{font-size:2rem;line-height:1.05;letter-spacing:-.05em;color:var(--tx);margin-bottom:8px}
 .checkout-secure{display:flex;align-items:center;gap:8px;color:var(--mu);font-size:.86rem;margin-bottom:24px}
@@ -511,8 +503,18 @@ body.modal-open{overflow:hidden}
 .field label{font-size:.82rem;font-weight:850;color:var(--tx)}
 .field input{width:100%;height:54px;border:1px solid #dfe7df;border-radius:14px;padding:0 16px;font:600 .98rem/1 -apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;color:var(--tx);outline:none;background:#fff;transition:border .15s,box-shadow .15s}
 .field input:focus{border-color:rgba(60,171,60,.65);box-shadow:0 0 0 4px rgba(60,171,60,.12)}
-.stripe-card-field{min-height:54px;border:1px solid #dfe7df;border-radius:14px;padding:17px 16px;background:#fff;transition:border .15s,box-shadow .15s}
+.card-payment-box{margin-bottom:18px}
+.card-payment-label{display:block;font-size:.82rem;font-weight:900;color:var(--tx);margin-bottom:8px}
+.stripe-card-field{min-height:56px;border:1px solid #dfe7df;border-radius:14px;padding:18px 16px;background:#fff;transition:border .15s,box-shadow .15s}
 .stripe-card-field.StripeElement--focus{border-color:rgba(60,171,60,.65);box-shadow:0 0 0 4px rgba(60,171,60,.12)}
+.stripe-card-field.StripeElement--invalid{border-color:#ef9a9a}
+.card-helper{margin-top:8px;color:var(--mu);font-size:.74rem;font-weight:750;line-height:1.35}
+.saved-card-panel{display:none;margin:0 0 18px;padding:14px 16px;border:1px solid rgba(60,171,60,.3);border-radius:16px;background:var(--softg)}
+.saved-card-panel.is-visible{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.saved-card-copy{display:grid;gap:2px}
+.saved-card-copy strong{color:var(--tx);font-size:.9rem}
+.saved-card-copy span{color:var(--mu);font-size:.76rem;font-weight:750}
+.saved-card-change{border:0;background:#fff;color:var(--g);border-radius:999px;padding:9px 13px;font-weight:900;cursor:pointer;box-shadow:0 6px 16px rgba(20,45,20,.08);white-space:nowrap}
 .payment-loading{min-height:108px;border:1px solid #dfe7df;border-radius:16px;background:#fbfdfb;display:grid;place-items:center;color:var(--mu);font-size:.9rem;font-weight:850;text-align:center;padding:18px}
 .checkout-error{display:none;margin:0 0 14px;padding:11px 12px;border-radius:12px;background:#fff1f1;border:1px solid #f0c1c1;color:#9b1c1c;font-size:.78rem;font-weight:800;line-height:1.35;text-align:center}
 .checkout-error.is-visible{display:block}
@@ -526,8 +528,8 @@ body.modal-open{overflow:hidden}
 .save-row{display:flex;align-items:flex-start;gap:10px;margin:6px 0 18px;color:var(--mu);font-size:.86rem;line-height:1.4}
 .save-row input{margin-top:3px;accent-color:var(--g)}
 .purchase-alert{margin:-4px 0 16px;padding:10px 12px;border-radius:12px;background:#fff7e6;border:1px solid #f3d7a0;color:#6f4a00;font-size:.78rem;font-weight:800;line-height:1.35;text-align:center}
-.pay-button{width:100%;height:64px;border:0;border-radius:15px;background:#1167ff;color:#fff;font-size:1.15rem;font-weight:900;cursor:pointer;box-shadow:0 10px 22px rgba(17,103,255,.22);transition:transform .12s ease,background .12s ease}
-.pay-button:hover{transform:translateY(-1px);background:#075dec}
+.pay-button{width:100%;height:62px;border:0;border-radius:14px;background:linear-gradient(180deg,#35b735 0%,#268a26 100%);color:#fff;font-size:1.08rem;font-weight:900;cursor:pointer;box-shadow:0 12px 24px rgba(60,171,60,.22),inset 0 1px 0 rgba(255,255,255,.25);transition:transform .12s ease,background .12s ease,box-shadow .12s ease}
+.pay-button:hover{transform:translateY(-1px);background:linear-gradient(180deg,#42c842 0%,#237e23 100%);box-shadow:0 16px 30px rgba(60,171,60,.28),inset 0 1px 0 rgba(255,255,255,.25)}
 .checkout-note{font-size:.76rem;color:var(--mu);line-height:1.5;margin-top:14px;text-align:center}
 .checkout-success{display:none;margin-top:18px;border:1px solid rgba(60,171,60,.32);background:var(--softg);border-radius:20px;padding:22px;text-align:center}
 .checkout-success.is-visible{display:block}
@@ -548,28 +550,34 @@ body.modal-open{overflow:hidden}
 @media(max-width:520px){
   .checkout-overlay{align-items:flex-end;padding:0;background:rgba(4,8,6,.66)}
   .checkout-grid{grid-template-columns:1fr}
-  .checkout-modal{width:100%;max-height:94vh;border-radius:22px 22px 0 0}
+  .checkout-modal{width:100%;max-height:94vh;border-radius:20px 20px 0 0;grid-template-columns:1fr}
   .checkout-close{right:14px;top:12px;width:42px;height:42px}
-  .checkout-product{padding:22px 18px 18px;gap:14px}
+  .checkout-product{padding:18px 16px 14px;gap:12px}
   .checkout-brand{font-size:1rem;padding-right:44px}
   .checkout-brand-mark{width:36px;height:36px;border-radius:11px}
-  .checkout-product-art{min-height:120px;border-radius:18px}
+  .checkout-product-art{display:none}
   .checkout-product-art::before{inset:12px;border-radius:14px}
   .checkout-product-art svg{width:78px;height:78px}
   .checkout-product-image{max-height:108px}
-  .checkout-product h3,.checkout-form-panel h2{font-size:1.55rem}
+  .checkout-product h3{font-size:1.22rem;line-height:1.15;padding-right:40px}
+  .checkout-form-panel h2{font-size:1.45rem}
   .checkout-product p{display:none}
   .checkout-summary{gap:7px}
   .summary-row{font-size:.84rem}
   .summary-total{font-size:1.12rem;padding-top:10px}
-  .checkout-form-panel{padding:24px 18px 18px}
+  .checkout-form-panel{padding:20px 16px 16px}
   .checkout-kicker{font-size:.68rem;margin-bottom:6px}
-  .checkout-secure{font-size:.8rem;margin-bottom:18px;align-items:flex-start}
+  .checkout-secure{font-size:.78rem;margin-bottom:14px;align-items:flex-start;line-height:1.35}
+  #paymentElement{margin-bottom:14px!important;min-height:92px!important}
+  .payment-loading{min-height:92px;border-radius:14px}
+  .card-payment-box{margin-bottom:14px}
+  .saved-card-panel{align-items:flex-start;flex-direction:column}
+  .saved-card-change{width:100%}
   .field{margin-bottom:11px}
   .field input{height:56px;border-radius:13px;font-size:1rem}
   .save-row{font-size:.78rem;margin:2px 0 12px}
   .purchase-alert{font-size:.74rem;margin-bottom:12px}
-  .pay-button{position:sticky;bottom:0;height:62px;border-radius:15px;font-size:1.05rem;z-index:3}
+  .pay-button{position:sticky;bottom:0;height:58px;border-radius:14px;font-size:1rem;z-index:3}
   .checkout-note{font-size:.7rem;margin-top:10px}
   .download-link{width:100%;min-height:52px}
 }
@@ -638,13 +646,6 @@ body.modal-open{overflow:hidden}
       <div class="hero-pill">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 3v2.1c1.7.3 3 1.3 3.9 2.8l-2.1 1.2A3.2 3.2 0 0 0 12 7.5c-1.4 0-2.3.6-2.3 1.5 0 1 1 1.3 3.3 1.9 2.4.6 4.5 1.5 4.5 4.3 0 2.3-1.7 3.9-4.5 4.3V22h-2v-2.5c-2.3-.4-4-1.7-4.8-3.7l2.3-1c.5 1.5 1.8 2.3 3.5 2.3 1.7 0 2.7-.7 2.7-1.7 0-1.1-1.1-1.4-3.6-2-2.1-.6-4.2-1.4-4.2-4.2 0-2.1 1.6-3.7 4.1-4.1V3h2Z"/></svg>
         Package Client Offers
-      </div>
-    </div>
-
-    <div class="hero-video-wrap">
-      <div class="hero-vsl has-video" aria-label="Voice AI offer video. Click to toggle sound.">
-        <video class="hero-video" src="voice-ai-offer-hero.mp4" autoplay muted loop playsinline preload="metadata"></video>
-        <div class="video-sound-badge">Click for sound</div>
       </div>
     </div>
 
@@ -1084,13 +1085,24 @@ body.modal-open{overflow:hidden}
       </div>
     </aside>
     <section class="checkout-form-panel">
-      <div class="checkout-kicker">Stripe-backed payment</div>
+      <div class="checkout-kicker">Card payment</div>
       <h2 id="checkoutTitle">Complete Your Purchase</h2>
-      <div class="checkout-secure"><span>✓</span> Card details are encrypted and processed directly through Stripe.</div>
-      <div id="paymentElement" style="margin-bottom:18px;min-height:108px"></div>
+      <div class="checkout-secure"><span>✓</span> Enter your card once. Stripe securely reuses it for other purchases during this browser session.</div>
+      <div class="saved-card-panel" id="savedCardPanel">
+        <div class="saved-card-copy">
+          <strong>Using saved session card</strong>
+          <span>No card number is stored on this website.</span>
+        </div>
+        <button class="saved-card-change" type="button" id="changeCardButton">Use different card</button>
+      </div>
+      <div class="card-payment-box" id="cardPaymentBox">
+        <label class="card-payment-label" for="paymentElement">Card information</label>
+        <div id="paymentElement" class="stripe-card-field"></div>
+        <div class="card-helper">Card number, expiration, and CVC are handled by Stripe in one secure field.</div>
+      </div>
       <div class="checkout-error" id="checkoutError"></div>
       <button class="pay-button" type="button" id="paySubmit" onclick="submitCardPayment()">Pay Securely</button>
-      <p class="checkout-note" id="checkoutNote">Payments are processed securely with Stripe. Your product download appears in this popup after payment is confirmed.</p>
+      <p class="checkout-note" id="checkoutNote">Payments are processed securely with Stripe. Your download appears here after confirmation.</p>
       <div class="checkout-success" id="checkoutSuccess">
         <strong>Payment confirmed</strong>
         <p>Your download is ready. A receipt and access details should also be sent to your email.</p>
@@ -1107,22 +1119,6 @@ body.modal-open{overflow:hidden}
 </div>
 
 <script>
-/* ── VIDEO ── */
-const heroVideoWrap = document.querySelector('.hero-vsl');
-const heroVideo = document.querySelector('.hero-video');
-const videoSoundBadge = document.querySelector('.video-sound-badge');
-if (heroVideoWrap && heroVideo) {
-  heroVideo.muted = true;
-  heroVideo.play().catch(() => {
-    if (videoSoundBadge) videoSoundBadge.textContent = 'Tap to play';
-  });
-  heroVideoWrap.addEventListener('click', function(){
-    if (heroVideo.paused) heroVideo.play();
-    heroVideo.muted = !heroVideo.muted;
-    if (videoSoundBadge) videoSoundBadge.textContent = heroVideo.muted ? 'Click for sound' : 'Sound on';
-  });
-}
-
 /* ── PRODUCT CATALOG ── */
 const cloudflareDownloadBase = 'https://downloads.nexusluma.com';
 const cloudflareDownloadFallback = 'data:text/plain;charset=utf-8,Download%20link%20will%20be%20provided%20after%20payment%20confirmation.';
@@ -1162,6 +1158,9 @@ const STRIPE_KEY = 'pk_test_51REXciCySCiHdPyyts0MmZgs87FbnLYUjF91PvwD4XWyL1SE1g7
 let stripe = null;
 let stripeScriptPromise = null;
 let stripeElements = null;
+let cardElement = null;
+let cardElementReady = false;
+let useSavedSessionCard = false;
 let activePaymentClientSecret = '';
 let activePaymentIntentId = '';
 let checkoutRequestId = 0;
@@ -1178,6 +1177,9 @@ const checkoutTotal         = document.getElementById('checkoutTotal');
 const checkoutImage         = document.getElementById('checkoutImage');
 const payButton             = document.getElementById('paySubmit');
 const paymentElementHost    = document.getElementById('paymentElement');
+const cardPaymentBox        = document.getElementById('cardPaymentBox');
+const savedCardPanel        = document.getElementById('savedCardPanel');
+const changeCardButton      = document.getElementById('changeCardButton');
 const downloadLink          = document.getElementById('downloadLink');
 const downloadLinkText      = document.getElementById('downloadLinkText');
 const checkoutError         = document.getElementById('checkoutError');
@@ -1190,6 +1192,37 @@ function encodeR2Path(product) {
 function cloudflareDownloadUrl(product) {
   if (!product.bucket || !product.fileKey) return cloudflareDownloadFallback;
   return cloudflareDownloadBase.replace(/\/$/, '') + '/' + encodeR2Path(product);
+}
+function getCheckoutSessionId() {
+  const key = 'rai_checkout_session_id';
+  let sessionId = sessionStorage.getItem(key);
+  if (!sessionId) {
+    sessionId = 'sess_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+    sessionStorage.setItem(key, sessionId);
+  }
+  return sessionId;
+}
+function getSavedSessionPayment() {
+  try {
+    return JSON.parse(sessionStorage.getItem('rai_saved_payment') || 'null');
+  } catch (error) {
+    return null;
+  }
+}
+function saveSessionPayment(paymentIntent, customerId) {
+  const paymentMethodId = typeof paymentIntent.payment_method === 'string'
+    ? paymentIntent.payment_method
+    : paymentIntent.payment_method && paymentIntent.payment_method.id;
+  if (!paymentMethodId || !customerId) return;
+  sessionStorage.setItem('rai_saved_payment', JSON.stringify({
+    paymentMethodId,
+    customerId,
+    savedAt: Date.now()
+  }));
+}
+function clearSessionPayment() {
+  sessionStorage.removeItem('rai_saved_payment');
+  useSavedSessionCard = false;
 }
 function productFromButton(button) {
   const k = button.dataset.product;
@@ -1220,19 +1253,11 @@ function setPaymentLoading(message) {
   if (!paymentElementHost) return;
   paymentElementHost.innerHTML = '<div class="payment-loading">' + message + '</div>';
 }
-
-function pauseCheckoutBackgroundMedia() {
-  if (heroVideo && !heroVideo.paused) {
-    heroVideo.dataset.checkoutPaused = 'true';
-    heroVideo.pause();
-  }
-}
-
-function resumeCheckoutBackgroundMedia() {
-  if (heroVideo && heroVideo.dataset.checkoutPaused === 'true') {
-    delete heroVideo.dataset.checkoutPaused;
-    heroVideo.play().catch(() => {});
-  }
+function setSavedCardUi() {
+  const savedPayment = getSavedSessionPayment();
+  useSavedSessionCard = Boolean(savedPayment && savedPayment.paymentMethodId && savedPayment.customerId);
+  if (savedCardPanel) savedCardPanel.classList.toggle('is-visible', useSavedSessionCard);
+  if (cardPaymentBox) cardPaymentBox.style.display = useSavedSessionCard ? 'none' : '';
 }
 
 function loadStripeJs() {
@@ -1256,7 +1281,39 @@ function loadStripeJs() {
   return stripeScriptPromise;
 }
 
-/* ── OPEN CHECKOUT — creates intent + mounts Payment Element ── */
+function mountCardElement() {
+  if (!stripe || cardElement) return;
+  stripeElements = stripe.elements();
+  cardElement = stripeElements.create('card', {
+    hidePostalCode: true,
+    style: {
+      base: {
+        color: '#172017',
+        fontFamily: "-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif",
+        fontSize: '16px',
+        fontWeight: '600',
+        '::placeholder': {color: '#8a948a'}
+      },
+      invalid: {
+        color: '#9b1c1c',
+        iconColor: '#d32f2f'
+      }
+    }
+  });
+  cardElement.on('ready', () => {
+    cardElementReady = true;
+  });
+  cardElement.on('change', event => {
+    if (event.error) setPayMessage(event.error.message);
+    else setPayMessage('');
+  });
+  if (paymentElementHost) {
+    paymentElementHost.innerHTML = '';
+    cardElement.mount('#paymentElement');
+  }
+}
+
+/* ── OPEN CHECKOUT — creates card-only intent and mounts one card field ── */
 async function openCheckout(product) {
   const requestId = ++checkoutRequestId;
   activeProduct = product;
@@ -1279,26 +1336,32 @@ async function openCheckout(product) {
   if (checkoutNote) checkoutNote.style.display = '';
   setPayMessage('');
   setPayBusy(true, 'Loading payment form...');
-
-  /* clear any previous Payment Element */
-  setPaymentLoading('Loading secure Stripe checkout...');
+  setSavedCardUi();
+  if (!useSavedSessionCard && !cardElement) setPaymentLoading('Loading secure card field...');
 
   /* show the overlay immediately so user sees "Loading…" */
   checkoutOverlay.classList.add('is-open');
   checkoutOverlay.setAttribute('aria-hidden', 'false');
   document.body.classList.add('modal-open');
-  pauseCheckoutBackgroundMedia();
 
   try {
     await new Promise(resolve => requestAnimationFrame(resolve));
     await loadStripeJs();
+    mountCardElement();
     if (requestId !== checkoutRequestId) return;
 
-    /* create payment intent */
+    const savedPayment = getSavedSessionPayment();
+    const sessionCustomerId = (savedPayment && savedPayment.customerId) || sessionStorage.getItem('rai_customer_id');
+
+    /* create card-only payment intent */
     const res = await fetch('/.netlify/functions/create-payment-intent', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ productKey: product.key })
+      body:    JSON.stringify({
+        productKey: product.key,
+        checkoutSessionId: getCheckoutSessionId(),
+        customerId: sessionCustomerId
+      })
     });
     const data = await res.json();
     if (requestId !== checkoutRequestId) return;
@@ -1306,43 +1369,9 @@ async function openCheckout(product) {
 
     activePaymentClientSecret = data.clientSecret;
     activePaymentIntentId = data.paymentIntentId || '';
-
-    /* build Payment Element with brand colours */
-    if (stripeElements) stripeElements = null;
-    stripeElements = stripe.elements({
-      clientSecret: activePaymentClientSecret,
-      appearance: {
-        theme: 'stripe',
-        variables: {
-          colorPrimary:         '#3CAB3C',
-          colorText:            '#172017',
-          colorTextSecondary:   '#5d685d',
-          colorBackground:      '#ffffff',
-          colorDanger:          '#d32f2f',
-          borderRadius:         '14px',
-          fontFamily:           "-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif",
-          spacingUnit:          '4px'
-        },
-        rules: {
-          '.Input': {
-            border:     '1px solid #dfe7df',
-            boxShadow:  'none',
-            padding:    '14px 16px'
-          },
-          '.Label': {
-            color:      '#172017',
-            fontWeight: '850',
-            fontSize:   '13px'
-          }
-        }
-      }
-    });
-
-    const paymentElement = stripeElements.create('payment', {
-      wallets: { applePay: 'never', googlePay: 'never' }
-    });
-    if (paymentElementHost) paymentElementHost.innerHTML = '';
-    paymentElement.mount('#paymentElement');
+    if (data.customerId) {
+      sessionStorage.setItem('rai_customer_id', data.customerId);
+    }
     setPayBusy(false, 'Pay ' + product.price + ' Securely');
 
   } catch (err) {
@@ -1353,16 +1382,31 @@ async function openCheckout(product) {
 
 /* ── SUBMIT PAYMENT ── */
 async function submitCardPayment() {
-  if (payBusy || !stripe || !stripeElements) return;
+  if (payBusy || !stripe || !activePaymentClientSecret) return;
   setPayBusy(true);
   setPayMessage('');
 
-  const { error, paymentIntent } = await stripe.confirmPayment({
-    elements:  stripeElements,
-    redirect:  'if_required'
-  });
+  const savedPayment = getSavedSessionPayment();
+  const confirmationOptions = useSavedSessionCard && savedPayment
+    ? {payment_method: savedPayment.paymentMethodId}
+    : {payment_method: {card: cardElement}};
+
+  if (!useSavedSessionCard && (!cardElement || !cardElementReady)) {
+    setPayBusy(false, 'Pay ' + (activeProduct ? activeProduct.price : '') + ' Securely');
+    setPayMessage('Card field is still loading. Please try again in a moment.');
+    return;
+  }
+
+  const { error, paymentIntent } = await stripe.confirmCardPayment(
+    activePaymentClientSecret,
+    confirmationOptions
+  );
 
   if (error) {
+    if (useSavedSessionCard) {
+      clearSessionPayment();
+      setSavedCardUi();
+    }
     setPayBusy(false, 'Pay ' + (activeProduct ? activeProduct.price : '') + ' Securely');
     setPayMessage(error.message || 'Payment failed. Please try again.');
     return;
@@ -1370,6 +1414,7 @@ async function submitCardPayment() {
 
   if (paymentIntent && paymentIntent.status === 'succeeded') {
     activePaymentIntentId = paymentIntent.id;
+    saveSessionPayment(paymentIntent, sessionStorage.getItem('rai_customer_id') || (savedPayment && savedPayment.customerId));
     try {
       const confirmed = await fetchDownloadUrl(activeProduct, paymentIntent.id);
       completePurchase(activeProduct, confirmed);
@@ -1486,7 +1531,6 @@ function closeCheckout() {
   checkoutOverlay.classList.remove('is-open');
   checkoutOverlay.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('modal-open');
-  resumeCheckoutBackgroundMedia();
 }
 
 /* ── BUTTON WIRING ── */
@@ -1498,6 +1542,11 @@ document.querySelectorAll('.hero-cta,.pcard-btn,.cat-btn,.bundle-btn').forEach(b
 });
 
 document.querySelector('.checkout-close').addEventListener('click', closeCheckout);
+if (changeCardButton) changeCardButton.addEventListener('click', () => {
+  clearSessionPayment();
+  setSavedCardUi();
+  setPayMessage('');
+});
 if (downloadLink) downloadLink.addEventListener('click', downloadPaidProduct);
 checkoutOverlay.addEventListener('click', e => { if (e.target === checkoutOverlay) closeCheckout(); });
 document.addEventListener('keydown', e => {
