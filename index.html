@@ -108,6 +108,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text'
 .vsl-inner h2{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.4rem;color:var(--tx);margin-bottom:8px}
 .vsl-inner p{color:var(--mu);font-size:.88rem;margin-bottom:32px}
 .vsl-frame{position:relative;aspect-ratio:16/9;background:#111;border-radius:8px;overflow:hidden;cursor:pointer;border:1px solid #e0e0e0;box-shadow:0 4px 20px rgba(0,0,0,.12)}
+.vsl-video{display:block;width:100%;height:100%;object-fit:cover;background:#000}
 .vsl-bar{position:absolute;left:0;right:0;height:36px;background:#000;z-index:2}
 .vsl-bar.top{top:0}
 .vsl-bar.bot{bottom:0}
@@ -789,6 +790,18 @@ body.modal-open{overflow:hidden}
   </div>
 </section>
 
+<!-- ═══ VSL VIDEO ═══ -->
+<section class="vsl-section" id="vsl">
+  <div class="vsl-inner">
+    <span class="vsl-tag">Watch The Overview</span>
+    <h2>See How The AI Business Builder Bundle Works</h2>
+    <p>A quick walkthrough of the systems, templates, and training included in the bundle.</p>
+    <div class="vsl-frame">
+      <video class="vsl-video" src="voice-ai-offer-hero.mp4" controls playsinline preload="metadata"></video>
+    </div>
+  </div>
+</section>
+
 
 
 <!-- ═══ MID BANNER ═══ -->
@@ -1429,19 +1442,24 @@ async function submitCardPayment() {
   setPayMessage('Payment is still processing. Please wait a moment and refresh if needed.');
 }
 
-/* ── BUILD DOWNLOAD URL — server verifies payment and redirects to signed R2 URL ── */
-function fetchDownloadUrl(product, paymentIntentId) {
-  const query = new URLSearchParams({
-    productKey: product.key,
-    paymentIntentId
+/* ── BUILD DOWNLOAD URL — server verifies payment before issuing short signed URL ── */
+async function fetchDownloadUrl(product, paymentIntentId) {
+  const response = await fetch('/.netlify/functions/confirm-purchase', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      productKey: product.key,
+      paymentIntentId
+    })
   });
-
-  return Promise.resolve({
-    downloadUrl: '/.netlify/functions/confirm-purchase?' + query.toString(),
-    fileName: product.fileName,
-    paymentIntentId,
-    serverRedirect: true
-  });
+  const details = await response.json();
+  if (!response.ok || !details.downloadUrl) {
+    throw new Error(details.error || 'Payment confirmed, but the download could not be prepared.');
+  }
+  return {
+    ...details,
+    directSignedUrl: true
+  };
 }
 
 /* ── COMPLETE PURCHASE — show download inline ── */

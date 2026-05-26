@@ -85,10 +85,10 @@ function getR2Client() {
 }
 
 exports.handler = async event => {
-  if (!['POST', 'GET'].includes(event.httpMethod)) {
+  if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
-      headers: {'Allow': 'POST, GET'},
+      headers: {'Allow': 'POST'},
       body: JSON.stringify({error: 'Method not allowed'})
     };
   }
@@ -98,9 +98,7 @@ exports.handler = async event => {
   }
 
   try {
-    const payload = event.httpMethod === 'GET'
-      ? event.queryStringParameters || {}
-      : JSON.parse(event.body || '{}');
+    const payload = JSON.parse(event.body || '{}');
     const product = productCatalog[payload.productKey];
 
     if (!product || !payload.paymentIntentId) {
@@ -118,6 +116,10 @@ exports.handler = async event => {
       return json(403, {error: 'Payment does not match this product.'});
     }
 
+    if (paymentIntent.metadata.downloadIssuedAt) {
+      return json(409, {error: 'This purchase download was already issued. Please complete checkout again for a new download.'});
+    }
+
     const r2 = getR2Client();
     const command = new GetObjectCommand({
       Bucket: product.bucket,
@@ -125,18 +127,15 @@ exports.handler = async event => {
       ResponseContentDisposition: `attachment; filename="${product.fileName.replace(/"/g, '')}"`,
       ResponseContentType: 'application/zip'
     });
-    const downloadUrl = await getSignedUrl(r2, command, {expiresIn: 900});
+    const downloadUrl = await getSignedUrl(r2, command, {expiresIn: 60});
 
-    if (event.httpMethod === 'GET') {
-      return {
-        statusCode: 302,
-        headers: {
-          'Location': downloadUrl,
-          'Cache-Control': 'no-store'
-        },
-        body: ''
-      };
-    }
+    await stripe.paymentIntents.update(paymentIntent.id, {
+      metadata: {
+        ...paymentIntent.metadata,
+        downloadIssuedAt: new Date().toISOString(),
+        downloadedProductKey: payload.productKey
+      }
+    });
 
     return json(200, {
       downloadUrl,

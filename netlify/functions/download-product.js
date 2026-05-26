@@ -106,6 +106,10 @@ async function verifyPayment(productKey, paymentIntentId) {
   if (paymentIntent.metadata.productKey !== productKey) {
     throw new Error('Payment does not match this product.');
   }
+
+  if (paymentIntent.metadata.downloadIssuedAt) {
+    throw new Error('This purchase download was already issued. Please complete checkout again for a new download.');
+  }
 }
 
 exports.handler = async event => {
@@ -116,6 +120,8 @@ exports.handler = async event => {
       body: JSON.stringify({error: 'Method not allowed'})
     };
   }
+
+  return json(410, {error: 'Direct product downloads are disabled. Please complete checkout to receive a fresh download link.'});
 
   try {
     const payload = JSON.parse(event.body || '{}');
