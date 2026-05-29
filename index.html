@@ -17,8 +17,7 @@
 <meta name="twitter:title" content="AI Business Builder Bundle">
 <meta name="twitter:description" content="Learn AI voice assistants, chatbot agents, automations, websites, and client-ready AI business systems from home.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23050505'/%3E%3Cpath d='M14 38h18M18 46h14M22 28h14' stroke='%233CAB3C' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M35 15l15 8v18l-15 8-15-8V23l15-8z' fill='%233CAB3C'/%3E%3Cpath d='M28 28h6v16h-6V28zm10 0h8v5h-3v11h-5V28z' fill='white'/%3E%3C/svg%3E">
-<link rel="preload" href="voice-ai-offer-hero-fast.mp4" as="video" type="video/mp4">
-<link rel="preload" href="voice-ai-offer-poster.jpg" as="image">
+<link rel="preload" href="voice-ai-offer-poster.jpg" as="image" fetchpriority="high">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -54,7 +53,7 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Inter','Helvetica Neue',Arial,sans-serif;background:#fff;color:#222;overflow-x:hidden;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Inter','Helvetica Neue',Arial,sans-serif;background:#fff;color:#222;overflow-x:hidden;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overscroll-behavior-y:none}
 :root{--g:#3CAB3C;--gd:#2d8a2d;--softg:#eef8ee;--dk:#111111;--dk2:#1a1a1a;--lg:#f8fbf8;--bd:#dfe9df;--tx:#172017;--mu:#5d685d;--rd:#d32f2f}
 
 /* HERO */
@@ -76,6 +75,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text'
 .hero-pill svg{width:18px;height:18px;color:var(--g);flex:0 0 auto}
 .hero-video-frame{width:min(920px,100%);aspect-ratio:16/9;margin:0 auto 28px;overflow:hidden;border-radius:12px;background:#050505;border:1px solid rgba(23,32,23,.16);box-shadow:0 24px 60px rgba(13,38,13,.2)}
 .hero-video{display:block;width:100%;height:100%;object-fit:cover;background:#050505}
+.pain-section,.products-section,.mid-banner,.cat-section,.kit-section,.testimonial-section,.bundle-section,.newsletter,.site-footer{content-visibility:auto}
+.pain-section{contain-intrinsic-size:760px}
+.products-section{contain-intrinsic-size:520px}
+.mid-banner{contain-intrinsic-size:360px}
+.cat-section{contain-intrinsic-size:280px}
+.kit-section{contain-intrinsic-size:920px}
+.testimonial-section{contain-intrinsic-size:980px}
+.bundle-section{contain-intrinsic-size:920px}
+.newsletter{contain-intrinsic-size:160px}
+.site-footer{contain-intrinsic-size:80px}
 .btn-green{display:inline-flex;align-items:center;justify-content:center;text-align:center;background:var(--g);color:#fff;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;font-weight:800;font-size:.9rem;padding:13px 30px;border-radius:999px;text-decoration:none;transition:transform .15s,background .15s,box-shadow .15s;border:none;cursor:pointer;margin-left:auto;margin-right:auto;box-shadow:0 10px 26px rgba(60,171,60,.22)}
 .btn-green:hover{background:var(--gd);transform:translateY(-1px);box-shadow:0 14px 32px rgba(60,171,60,.28)}
 
@@ -643,8 +652,8 @@ body.modal-open{overflow:hidden}
     </h1>
 
     <div class="hero-video-frame" aria-label="AI Business Builder Bundle overview video">
-      <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="voice-ai-offer-poster.jpg" controls>
-        <source src="voice-ai-offer-hero-fast.mp4" type="video/mp4">
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="voice-ai-offer-poster.jpg" controls width="1920" height="1080">
+        <source src="voice-ai-offer-hero-1080p.mp4" type="video/mp4">
       </video>
     </div>
 
