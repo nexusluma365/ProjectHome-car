@@ -24,6 +24,16 @@
   to = "/Learn How To Make Money From Home.html"
   status = 200
 
+[[redirects]]
+  from = "/learnhowtomakemoneyfromhome"
+  to = "/Learn How To Make Money From Home.html"
+  status = 200
+
+[[redirects]]
+  from = "/learnhowtomakemoneyfromhome/"
+  to = "/Learn How To Make Money From Home.html"
+  status = 200
+
 [[headers]]
   for = "/*"
   [headers.values]
