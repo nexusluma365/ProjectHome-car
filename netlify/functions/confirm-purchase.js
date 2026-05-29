@@ -63,6 +63,21 @@ function json(statusCode, body) {
   };
 }
 
+function publicStripeError(error) {
+  const message = (error && error.message) || '';
+  const lower = message.toLowerCase();
+
+  if (lower.includes('no such payment_intent') || lower.includes('similar object exists in test mode')) {
+    return json(400, {error: 'Payment verification failed. Please start checkout again.'});
+  }
+
+  if (error && error.type === 'StripeCardError') {
+    return json(402, {error: 'Sorry, payment did not go through. Please try again or try another payment method.'});
+  }
+
+  return null;
+}
+
 function getR2Client() {
   const accountId = process.env.CLOUDFLARE_R2_ACCOUNT_ID || process.env.R2_ACCOUNT_ID || process.env.CF_R2_ACCOUNT_ID;
   const accessKeyId = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID || process.env.R2_ACCESS_KEY_ID || process.env.R2_ACCESS_KEY;
@@ -144,6 +159,9 @@ exports.handler = async event => {
       productName: product.name
     });
   } catch (error) {
+    const stripeResponse = publicStripeError(error);
+    if (stripeResponse) return stripeResponse;
+
     return json(500, {error: error.message || 'Download could not be prepared.'});
   }
 };

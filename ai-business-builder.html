@@ -1170,6 +1170,7 @@ let checkoutRequestId = 0;
 let payBusy = false;
 let activeProduct = checkoutProducts.bundle;
 let paidProduct = null;
+const PAYMENT_NOT_COMPLETED_MESSAGE = 'Sorry, payment did not go through. Please try again or try another payment method.';
 
 /* ── DOM REFS ── */
 const checkoutOverlay       = document.getElementById('checkoutOverlay');
@@ -1221,6 +1222,27 @@ function setPayBusy(isBusy, label) {
 function setPaymentLoading(message) {
   if (!paymentElementHost) return;
   paymentElementHost.innerHTML = '<div class="payment-loading">' + message + '</div>';
+}
+function paymentFailureMessage(error) {
+  const text = ((error && (error.message || error.code || error.decline_code)) || '').toLowerCase();
+  const customerPaymentIssue = error && (
+    error.type === 'card_error' ||
+    error.type === 'validation_error' ||
+    text.includes('declin') ||
+    text.includes('incorrect') ||
+    text.includes('insufficient') ||
+    text.includes('expired') ||
+    text.includes('cvc') ||
+    text.includes('authentication')
+  );
+  return customerPaymentIssue ? PAYMENT_NOT_COMPLETED_MESSAGE : 'Payment could not be completed. Please refresh and try again.';
+}
+function paymentSetupMessage(error) {
+  const text = ((error && error.message) || '').toLowerCase();
+  if (text.includes('stripe secret key') || text.includes('r2_') || text.includes('environment')) {
+    return error.message;
+  }
+  return 'Payment could not be started. Please refresh and try again.';
 }
 
 function loadStripeJs() {
@@ -1334,7 +1356,7 @@ async function openCheckout(product) {
 
   } catch (err) {
     setPayBusy(false, 'Try Again');
-    setPayMessage(err.message || 'Payment setup failed. Please refresh and try again.');
+    setPayMessage(paymentSetupMessage(err));
   }
 }
 
@@ -1351,7 +1373,7 @@ async function submitCardPayment() {
 
   if (error) {
     setPayBusy(false, 'Pay ' + (activeProduct ? activeProduct.price : '') + ' Securely');
-    setPayMessage(error.message || 'Payment failed. Please try again.');
+    setPayMessage(paymentFailureMessage(error));
     return;
   }
 
@@ -1371,19 +1393,24 @@ async function submitCardPayment() {
   setPayMessage('Payment is still processing. Please wait a moment and refresh if needed.');
 }
 
-/* ── BUILD DOWNLOAD URL — server verifies payment and redirects to signed R2 URL ── */
-function fetchDownloadUrl(product, paymentIntentId) {
-  const query = new URLSearchParams({
-    productKey: product.key,
-    paymentIntentId
+/* ── BUILD DOWNLOAD URL — server verifies payment before issuing short signed URL ── */
+async function fetchDownloadUrl(product, paymentIntentId) {
+  const response = await fetch('/.netlify/functions/confirm-purchase', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      productKey: product.key,
+      paymentIntentId
+    })
   });
-
-  return Promise.resolve({
-    downloadUrl: '/.netlify/functions/confirm-purchase?' + query.toString(),
-    fileName: product.fileName,
-    paymentIntentId,
-    serverRedirect: true
-  });
+  const details = await response.json();
+  if (!response.ok || !details.downloadUrl) {
+    throw new Error(details.error || 'Payment confirmed, but the download could not be prepared.');
+  }
+  return {
+    ...details,
+    directSignedUrl: true
+  };
 }
 
 /* ── COMPLETE PURCHASE — show download inline ── */

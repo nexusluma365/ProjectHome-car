@@ -27,6 +27,21 @@ const productCatalog = {
   }
 };
 
+function stripePublicError(error) {
+  const message = (error && error.message) || '';
+  const lower = message.toLowerCase();
+
+  if (lower.includes('similar object exists in test mode') || lower.includes('no such')) {
+    return 'Payment could not be started. Please refresh and try again.';
+  }
+
+  if (error && error.type === 'StripeCardError') {
+    return 'Sorry, payment did not go through. Please try again or try another payment method.';
+  }
+
+  return message || 'Payment could not be started.';
+}
+
 exports.handler = async event => {
   if (event.httpMethod !== 'POST') {
     return {
@@ -102,7 +117,7 @@ exports.handler = async event => {
   } catch (error) {
     return {
       statusCode: 500,
-      body: JSON.stringify({error: error.message || 'Payment could not be started.'})
+      body: JSON.stringify({error: stripePublicError(error)})
     };
   }
 };

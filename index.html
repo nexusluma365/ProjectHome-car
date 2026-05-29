@@ -123,7 +123,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text'
 .vsl-inner h2{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.4rem;color:var(--tx);margin-bottom:8px}
 .vsl-inner p{color:var(--mu);font-size:.88rem;margin-bottom:32px}
 .vsl-frame{position:relative;aspect-ratio:16/9;background:#111;border-radius:8px;overflow:hidden;cursor:pointer;border:1px solid #e0e0e0;box-shadow:0 4px 20px rgba(0,0,0,.12)}
-.vsl-video{display:block;width:100%;height:100%;object-fit:cover;background:#000}
 .vsl-bar{position:absolute;left:0;right:0;height:36px;background:#000;z-index:2}
 .vsl-bar.top{top:0}
 .vsl-bar.bot{bottom:0}
@@ -525,18 +524,8 @@ body.modal-open{overflow:hidden}
 .field label{font-size:.82rem;font-weight:850;color:var(--tx)}
 .field input{width:100%;height:54px;border:1px solid #dfe7df;border-radius:14px;padding:0 16px;font:600 .98rem/1 -apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;color:var(--tx);outline:none;background:#fff;transition:border .15s,box-shadow .15s}
 .field input:focus{border-color:rgba(60,171,60,.65);box-shadow:0 0 0 4px rgba(60,171,60,.12)}
-.card-payment-box{margin-bottom:18px}
-.card-payment-label{display:block;font-size:.82rem;font-weight:900;color:var(--tx);margin-bottom:8px}
-.stripe-card-field{min-height:56px;border:1px solid #dfe7df;border-radius:14px;padding:18px 16px;background:#fff;transition:border .15s,box-shadow .15s}
+.stripe-card-field{min-height:54px;border:1px solid #dfe7df;border-radius:14px;padding:17px 16px;background:#fff;transition:border .15s,box-shadow .15s}
 .stripe-card-field.StripeElement--focus{border-color:rgba(60,171,60,.65);box-shadow:0 0 0 4px rgba(60,171,60,.12)}
-.stripe-card-field.StripeElement--invalid{border-color:#ef9a9a}
-.card-helper{margin-top:8px;color:var(--mu);font-size:.74rem;font-weight:750;line-height:1.35}
-.saved-card-panel{display:none;margin:0 0 18px;padding:14px 16px;border:1px solid rgba(60,171,60,.3);border-radius:16px;background:var(--softg)}
-.saved-card-panel.is-visible{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.saved-card-copy{display:grid;gap:2px}
-.saved-card-copy strong{color:var(--tx);font-size:.9rem}
-.saved-card-copy span{color:var(--mu);font-size:.76rem;font-weight:750}
-.saved-card-change{border:0;background:#fff;color:var(--g);border-radius:999px;padding:9px 13px;font-weight:900;cursor:pointer;box-shadow:0 6px 16px rgba(20,45,20,.08);white-space:nowrap}
 .payment-loading{min-height:108px;border:1px solid #dfe7df;border-radius:16px;background:#fbfdfb;display:grid;place-items:center;color:var(--mu);font-size:.9rem;font-weight:850;text-align:center;padding:18px}
 .checkout-error{display:none;margin:0 0 14px;padding:11px 12px;border-radius:12px;background:#fff1f1;border:1px solid #f0c1c1;color:#9b1c1c;font-size:.78rem;font-weight:800;line-height:1.35;text-align:center}
 .checkout-error.is-visible{display:block}
@@ -592,9 +581,6 @@ body.modal-open{overflow:hidden}
   .checkout-secure{font-size:.78rem;margin-bottom:14px;align-items:flex-start;line-height:1.35}
   #paymentElement{margin-bottom:14px!important;min-height:92px!important}
   .payment-loading{min-height:92px;border-radius:14px}
-  .card-payment-box{margin-bottom:14px}
-  .saved-card-panel{align-items:flex-start;flex-direction:column}
-  .saved-card-change{width:100%}
   .field{margin-bottom:11px}
   .field input{height:56px;border-radius:13px;font-size:1rem}
   .save-row{font-size:.78rem;margin:2px 0 12px}
@@ -1114,24 +1100,13 @@ body.modal-open{overflow:hidden}
       </div>
     </aside>
     <section class="checkout-form-panel">
-      <div class="checkout-kicker">Card payment</div>
+      <div class="checkout-kicker">Stripe-backed payment</div>
       <h2 id="checkoutTitle">Complete Your Purchase</h2>
-      <div class="checkout-secure"><span>✓</span> Enter your card once. Stripe securely reuses it for other purchases during this browser session.</div>
-      <div class="saved-card-panel" id="savedCardPanel">
-        <div class="saved-card-copy">
-          <strong>Using saved session card</strong>
-          <span>No card number is stored on this website.</span>
-        </div>
-        <button class="saved-card-change" type="button" id="changeCardButton">Use different card</button>
-      </div>
-      <div class="card-payment-box" id="cardPaymentBox">
-        <label class="card-payment-label" for="paymentElement">Card information</label>
-        <div id="paymentElement" class="stripe-card-field"></div>
-        <div class="card-helper">Card number, expiration, and CVC are handled by Stripe in one secure field.</div>
-      </div>
+      <div class="checkout-secure"><span>✓</span> Card details are encrypted and processed directly through Stripe.</div>
+      <div id="paymentElement" style="margin-bottom:18px;min-height:108px"></div>
       <div class="checkout-error" id="checkoutError"></div>
       <button class="pay-button" type="button" id="paySubmit" onclick="submitCardPayment()">Pay Securely</button>
-      <p class="checkout-note" id="checkoutNote">Payments are processed securely with Stripe. Your download appears here after confirmation.</p>
+      <p class="checkout-note" id="checkoutNote">Payments are processed securely with Stripe. Your product download appears in this popup after payment is confirmed.</p>
       <div class="checkout-success" id="checkoutSuccess">
         <strong>Payment confirmed</strong>
         <p>Your download is ready. A receipt and access details should also be sent to your email.</p>
@@ -1187,15 +1162,13 @@ const STRIPE_KEY = 'pk_live_51REXciCySCiHdPyysRD7yOU1ixyNJztWBQZFWRylRen7KDpnr2x
 let stripe = null;
 let stripeScriptPromise = null;
 let stripeElements = null;
-let cardElement = null;
-let cardElementReady = false;
-let useSavedSessionCard = false;
 let activePaymentClientSecret = '';
 let activePaymentIntentId = '';
 let checkoutRequestId = 0;
 let payBusy = false;
 let activeProduct = checkoutProducts.bundle;
 let paidProduct = null;
+const PAYMENT_NOT_COMPLETED_MESSAGE = 'Sorry, payment did not go through. Please try again or try another payment method.';
 
 /* ── DOM REFS ── */
 const checkoutOverlay       = document.getElementById('checkoutOverlay');
@@ -1206,9 +1179,6 @@ const checkoutTotal         = document.getElementById('checkoutTotal');
 const checkoutImage         = document.getElementById('checkoutImage');
 const payButton             = document.getElementById('paySubmit');
 const paymentElementHost    = document.getElementById('paymentElement');
-const cardPaymentBox        = document.getElementById('cardPaymentBox');
-const savedCardPanel        = document.getElementById('savedCardPanel');
-const changeCardButton      = document.getElementById('changeCardButton');
 const downloadLink          = document.getElementById('downloadLink');
 const downloadLinkText      = document.getElementById('downloadLinkText');
 const checkoutError         = document.getElementById('checkoutError');
@@ -1221,37 +1191,6 @@ function encodeR2Path(product) {
 function cloudflareDownloadUrl(product) {
   if (!product.bucket || !product.fileKey) return cloudflareDownloadFallback;
   return cloudflareDownloadBase.replace(/\/$/, '') + '/' + encodeR2Path(product);
-}
-function getCheckoutSessionId() {
-  const key = 'rai_checkout_session_id';
-  let sessionId = sessionStorage.getItem(key);
-  if (!sessionId) {
-    sessionId = 'sess_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
-    sessionStorage.setItem(key, sessionId);
-  }
-  return sessionId;
-}
-function getSavedSessionPayment() {
-  try {
-    return JSON.parse(sessionStorage.getItem('rai_saved_payment') || 'null');
-  } catch (error) {
-    return null;
-  }
-}
-function saveSessionPayment(paymentIntent, customerId) {
-  const paymentMethodId = typeof paymentIntent.payment_method === 'string'
-    ? paymentIntent.payment_method
-    : paymentIntent.payment_method && paymentIntent.payment_method.id;
-  if (!paymentMethodId || !customerId) return;
-  sessionStorage.setItem('rai_saved_payment', JSON.stringify({
-    paymentMethodId,
-    customerId,
-    savedAt: Date.now()
-  }));
-}
-function clearSessionPayment() {
-  sessionStorage.removeItem('rai_saved_payment');
-  useSavedSessionCard = false;
 }
 function productFromButton(button) {
   const k = button.dataset.product;
@@ -1282,11 +1221,26 @@ function setPaymentLoading(message) {
   if (!paymentElementHost) return;
   paymentElementHost.innerHTML = '<div class="payment-loading">' + message + '</div>';
 }
-function setSavedCardUi() {
-  const savedPayment = getSavedSessionPayment();
-  useSavedSessionCard = Boolean(savedPayment && savedPayment.paymentMethodId && savedPayment.customerId);
-  if (savedCardPanel) savedCardPanel.classList.toggle('is-visible', useSavedSessionCard);
-  if (cardPaymentBox) cardPaymentBox.style.display = useSavedSessionCard ? 'none' : '';
+function paymentFailureMessage(error) {
+  const text = ((error && (error.message || error.code || error.decline_code)) || '').toLowerCase();
+  const customerPaymentIssue = error && (
+    error.type === 'card_error' ||
+    error.type === 'validation_error' ||
+    text.includes('declin') ||
+    text.includes('incorrect') ||
+    text.includes('insufficient') ||
+    text.includes('expired') ||
+    text.includes('cvc') ||
+    text.includes('authentication')
+  );
+  return customerPaymentIssue ? PAYMENT_NOT_COMPLETED_MESSAGE : 'Payment could not be completed. Please refresh and try again.';
+}
+function paymentSetupMessage(error) {
+  const text = ((error && error.message) || '').toLowerCase();
+  if (text.includes('stripe secret key') || text.includes('r2_') || text.includes('environment')) {
+    return error.message;
+  }
+  return 'Payment could not be started. Please refresh and try again.';
 }
 
 function loadStripeJs() {
@@ -1310,39 +1264,7 @@ function loadStripeJs() {
   return stripeScriptPromise;
 }
 
-function mountCardElement() {
-  if (!stripe || cardElement) return;
-  stripeElements = stripe.elements();
-  cardElement = stripeElements.create('card', {
-    hidePostalCode: true,
-    style: {
-      base: {
-        color: '#172017',
-        fontFamily: "-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif",
-        fontSize: '16px',
-        fontWeight: '600',
-        '::placeholder': {color: '#8a948a'}
-      },
-      invalid: {
-        color: '#9b1c1c',
-        iconColor: '#d32f2f'
-      }
-    }
-  });
-  cardElement.on('ready', () => {
-    cardElementReady = true;
-  });
-  cardElement.on('change', event => {
-    if (event.error) setPayMessage(event.error.message);
-    else setPayMessage('');
-  });
-  if (paymentElementHost) {
-    paymentElementHost.innerHTML = '';
-    cardElement.mount('#paymentElement');
-  }
-}
-
-/* ── OPEN CHECKOUT — creates card-only intent and mounts one card field ── */
+/* ── OPEN CHECKOUT — creates intent + mounts Payment Element ── */
 async function openCheckout(product) {
   const requestId = ++checkoutRequestId;
   activeProduct = product;
@@ -1365,8 +1287,9 @@ async function openCheckout(product) {
   if (checkoutNote) checkoutNote.style.display = '';
   setPayMessage('');
   setPayBusy(true, 'Loading payment form...');
-  setSavedCardUi();
-  if (!useSavedSessionCard && !cardElement) setPaymentLoading('Loading secure card field...');
+
+  /* clear any previous Payment Element */
+  setPaymentLoading('Loading secure Stripe checkout...');
 
   /* show the overlay immediately so user sees "Loading…" */
   checkoutOverlay.classList.add('is-open');
@@ -1376,21 +1299,13 @@ async function openCheckout(product) {
   try {
     await new Promise(resolve => requestAnimationFrame(resolve));
     await loadStripeJs();
-    mountCardElement();
     if (requestId !== checkoutRequestId) return;
 
-    const savedPayment = getSavedSessionPayment();
-    const sessionCustomerId = (savedPayment && savedPayment.customerId) || sessionStorage.getItem('rai_customer_id');
-
-    /* create card-only payment intent */
+    /* create payment intent */
     const res = await fetch('/.netlify/functions/create-payment-intent', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({
-        productKey: product.key,
-        checkoutSessionId: getCheckoutSessionId(),
-        customerId: sessionCustomerId
-      })
+      body:    JSON.stringify({ productKey: product.key })
     });
     const data = await res.json();
     if (requestId !== checkoutRequestId) return;
@@ -1398,52 +1313,70 @@ async function openCheckout(product) {
 
     activePaymentClientSecret = data.clientSecret;
     activePaymentIntentId = data.paymentIntentId || '';
-    if (data.customerId) {
-      sessionStorage.setItem('rai_customer_id', data.customerId);
-    }
+
+    /* build Payment Element with brand colours */
+    if (stripeElements) stripeElements = null;
+    stripeElements = stripe.elements({
+      clientSecret: activePaymentClientSecret,
+      appearance: {
+        theme: 'stripe',
+        variables: {
+          colorPrimary:         '#3CAB3C',
+          colorText:            '#172017',
+          colorTextSecondary:   '#5d685d',
+          colorBackground:      '#ffffff',
+          colorDanger:          '#d32f2f',
+          borderRadius:         '14px',
+          fontFamily:           "-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif",
+          spacingUnit:          '4px'
+        },
+        rules: {
+          '.Input': {
+            border:     '1px solid #dfe7df',
+            boxShadow:  'none',
+            padding:    '14px 16px'
+          },
+          '.Label': {
+            color:      '#172017',
+            fontWeight: '850',
+            fontSize:   '13px'
+          }
+        }
+      }
+    });
+
+    const paymentElement = stripeElements.create('payment', {
+      wallets: { applePay: 'never', googlePay: 'never' }
+    });
+    if (paymentElementHost) paymentElementHost.innerHTML = '';
+    paymentElement.mount('#paymentElement');
     setPayBusy(false, 'Pay ' + product.price + ' Securely');
 
   } catch (err) {
     setPayBusy(false, 'Try Again');
-    setPayMessage(err.message || 'Payment setup failed. Please refresh and try again.');
+    setPayMessage(paymentSetupMessage(err));
   }
 }
 
 /* ── SUBMIT PAYMENT ── */
 async function submitCardPayment() {
-  if (payBusy || !stripe || !activePaymentClientSecret) return;
+  if (payBusy || !stripe || !stripeElements) return;
   setPayBusy(true);
   setPayMessage('');
 
-  const savedPayment = getSavedSessionPayment();
-  const confirmationOptions = useSavedSessionCard && savedPayment
-    ? {payment_method: savedPayment.paymentMethodId}
-    : {payment_method: {card: cardElement}};
-
-  if (!useSavedSessionCard && (!cardElement || !cardElementReady)) {
-    setPayBusy(false, 'Pay ' + (activeProduct ? activeProduct.price : '') + ' Securely');
-    setPayMessage('Card field is still loading. Please try again in a moment.');
-    return;
-  }
-
-  const { error, paymentIntent } = await stripe.confirmCardPayment(
-    activePaymentClientSecret,
-    confirmationOptions
-  );
+  const { error, paymentIntent } = await stripe.confirmPayment({
+    elements:  stripeElements,
+    redirect:  'if_required'
+  });
 
   if (error) {
-    if (useSavedSessionCard) {
-      clearSessionPayment();
-      setSavedCardUi();
-    }
     setPayBusy(false, 'Pay ' + (activeProduct ? activeProduct.price : '') + ' Securely');
-    setPayMessage(error.message || 'Payment failed. Please try again.');
+    setPayMessage(paymentFailureMessage(error));
     return;
   }
 
   if (paymentIntent && paymentIntent.status === 'succeeded') {
     activePaymentIntentId = paymentIntent.id;
-    saveSessionPayment(paymentIntent, sessionStorage.getItem('rai_customer_id') || (savedPayment && savedPayment.customerId));
     try {
       const confirmed = await fetchDownloadUrl(activeProduct, paymentIntent.id);
       completePurchase(activeProduct, confirmed);
@@ -1576,11 +1509,6 @@ document.querySelectorAll('.hero-cta,.pcard-btn,.cat-btn,.bundle-btn').forEach(b
 });
 
 document.querySelector('.checkout-close').addEventListener('click', closeCheckout);
-if (changeCardButton) changeCardButton.addEventListener('click', () => {
-  clearSessionPayment();
-  setSavedCardUi();
-  setPayMessage('');
-});
 if (downloadLink) downloadLink.addEventListener('click', downloadPaidProduct);
 checkoutOverlay.addEventListener('click', e => { if (e.target === checkoutOverlay) closeCheckout(); });
 document.addEventListener('keydown', e => {
