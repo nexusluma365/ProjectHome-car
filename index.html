@@ -74,7 +74,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text'
 .hero-pill{min-height:58px;border:1px solid rgba(60,171,60,.38);border-radius:999px;background:#fff;color:var(--tx);display:flex;align-items:center;justify-content:center;text-align:center;gap:10px;padding:10px 18px;font-family:'Oswald',sans-serif;font-size:1rem;font-weight:700;line-height:1.05;text-transform:uppercase;letter-spacing:.035em;box-shadow:0 8px 24px rgba(35,92,35,.08)}
 .hero-pill svg{width:18px;height:18px;color:var(--g);flex:0 0 auto}
 .hero-video-frame{width:min(920px,100%);aspect-ratio:16/9;margin:0 auto 28px;overflow:hidden;border-radius:12px;background:#050505;border:1px solid rgba(23,32,23,.16);box-shadow:0 24px 60px rgba(13,38,13,.2)}
-.hero-video{display:block;width:100%;height:100%;object-fit:cover;background:#050505}
+.hero-video{display:block;width:100%;height:100%;object-fit:cover;background:#050505;cursor:pointer}
 .pain-section,.products-section,.mid-banner,.cat-section,.kit-section,.testimonial-section,.bundle-section,.newsletter,.site-footer{content-visibility:auto}
 .pain-section{contain-intrinsic-size:760px}
 .products-section{contain-intrinsic-size:520px}
@@ -638,7 +638,7 @@ body.modal-open{overflow:hidden}
     </h1>
 
     <div class="hero-video-frame" aria-label="AI Business Builder Bundle overview video">
-      <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="voice-ai-offer-poster.jpg" controls width="1920" height="1080">
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="voice-ai-offer-poster.jpg" width="1920" height="1080" aria-label="AI Business Builder Bundle overview video. Click to mute or unmute.">
         <source src="voice-ai-offer-hero-1080p.mp4" type="video/mp4">
       </video>
     </div>
@@ -1505,6 +1505,13 @@ document.querySelectorAll('.hero-cta,.pcard-btn,.cat-btn,.bundle-btn').forEach(b
   btn.addEventListener('click', e => {
     e.preventDefault();
     openCheckout(productFromButton(btn));
+  });
+});
+
+document.querySelectorAll('.hero-video').forEach(video => {
+  video.addEventListener('click', () => {
+    video.muted = !video.muted;
+    video.play().catch(() => {});
   });
 });
 
