@@ -25,6 +25,16 @@
   status = 200
 
 [[redirects]]
+  from = "/learnhowtomakemoneyfromhome/sitemap.xml"
+  to = "/sitemap.xml"
+  status = 200
+
+[[redirects]]
+  from = "/learnhowtomakemoneyfromhome/robots.txt"
+  to = "/robots.txt"
+  status = 200
+
+[[redirects]]
   from = "/Learnhowtomakemoneyfromhome/google941abbb6e3f43c35.html"
   to = "/google941abbb6e3f43c35.html"
   status = 200
