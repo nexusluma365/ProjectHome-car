@@ -4,6 +4,26 @@
 [functions]
   directory = "netlify/functions"
 
+[[redirects]]
+  from = "/home"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/home/"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/Learnhowtomakemoneyfromhome"
+  to = "/Learn How To Make Money From Home.html"
+  status = 200
+
+[[redirects]]
+  from = "/Learnhowtomakemoneyfromhome/"
+  to = "/Learn How To Make Money From Home.html"
+  status = 200
+
 [[headers]]
   for = "/*"
   [headers.values]
