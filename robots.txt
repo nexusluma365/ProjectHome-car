@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nexusluma.com/sitemap.xml
