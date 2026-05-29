@@ -5,6 +5,36 @@
   directory = "netlify/functions"
 
 [[redirects]]
+  from = "/home/google941abbb6e3f43c35.html"
+  to = "/google941abbb6e3f43c35.html"
+  status = 200
+
+[[redirects]]
+  from = "/home/google941abbb6e3f43c3h.html"
+  to = "/google941abbb6e3f43c3h.html"
+  status = 200
+
+[[redirects]]
+  from = "/learnhowtomakemoneyfromhome/google941abbb6e3f43c35.html"
+  to = "/google941abbb6e3f43c35.html"
+  status = 200
+
+[[redirects]]
+  from = "/learnhowtomakemoneyfromhome/google941abbb6e3f43c3h.html"
+  to = "/google941abbb6e3f43c3h.html"
+  status = 200
+
+[[redirects]]
+  from = "/Learnhowtomakemoneyfromhome/google941abbb6e3f43c35.html"
+  to = "/google941abbb6e3f43c35.html"
+  status = 200
+
+[[redirects]]
+  from = "/Learnhowtomakemoneyfromhome/google941abbb6e3f43c3h.html"
+  to = "/google941abbb6e3f43c3h.html"
+  status = 200
+
+[[redirects]]
   from = "/home"
   to = "/index.html"
   status = 200
