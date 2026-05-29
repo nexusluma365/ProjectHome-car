@@ -58,9 +58,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text'
 :root{--g:#3CAB3C;--gd:#2d8a2d;--softg:#eef8ee;--dk:#111111;--dk2:#1a1a1a;--lg:#f8fbf8;--bd:#dfe9df;--tx:#172017;--mu:#5d685d;--rd:#d32f2f}
 
 /* HERO */
-.brand-strip{height:92px;background:#050505;display:flex;align-items:center;justify-content:center;border-bottom:none;box-shadow:0 5px 18px rgba(0,0,0,.24)}
+.brand-strip{height:92px;background:#050505;display:flex;align-items:center;justify-content:center;border-bottom:none;box-shadow:0 5px 18px rgba(0,0,0,.24);position:relative;padding:0 180px}
 .brand-strip strong{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif;font-size:2.2rem;line-height:1;font-weight:850;letter-spacing:-.035em;color:#fff}
 .brand-strip span{color:var(--g);margin-left:.26em}
+.top-learn-link{position:absolute;right:28px;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 18px;border-radius:999px;background:rgba(60,171,60,.14);border:1px solid rgba(60,171,60,.46);color:#fff;text-decoration:none;font-size:.82rem;font-weight:850;letter-spacing:.01em;transition:background .15s,transform .15s,border-color .15s}
+.top-learn-link:hover{background:rgba(60,171,60,.24);border-color:rgba(60,171,60,.72);transform:translateY(calc(-50% - 1px))}
 .hero{background:linear-gradient(180deg,#fff 0%,#f7fbf7 100%);overflow:hidden;padding:48px 28px 64px;text-align:center}
 .hero-inner{max-width:1180px;margin:0 auto}
 .hero-kicker{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;font-size:.92rem;line-height:1.2;font-weight:700;letter-spacing:.035em;color:var(--tx);margin-bottom:8px}
@@ -261,6 +263,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text'
 .fsoc:hover{color:var(--g)}
 .site-footer{background:#050505;color:#fff;text-align:center;padding:20px 16px;font-size:.82rem;font-weight:700;letter-spacing:.01em}
 .site-footer span{color:var(--g)}
+.footer-learn-link{display:inline-flex;margin-top:8px;color:#fff;text-decoration:none;border-bottom:1px solid rgba(60,171,60,.55);font-size:.8rem;font-weight:850}
+.footer-learn-link:hover{color:var(--g)}
 
 /* Pain points */
 .pain-section{background:#0b0d0c;color:#fff;padding:74px 24px 82px;text-align:center;overflow:hidden;border-top:6px solid var(--g)}
@@ -346,6 +350,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text'
 .hero-cta,.btn-green,.pcard-btn,.cat-btn,.bundle-btn{display:inline-flex;align-items:center;justify-content:center;text-align:center;background:linear-gradient(180deg,#4ed34e 0%,#2f9c2f 100%);color:#fff;border-radius:999px;text-decoration:none;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;font-weight:900;letter-spacing:.005em;border:none;cursor:pointer;transition:transform .15s,box-shadow .15s,background .15s;box-shadow:0 18px 36px rgba(60,171,60,.3),inset 0 1px 0 rgba(255,255,255,.25)}
 .hero-cta:hover,.btn-green:hover,.pcard-btn:hover,.cat-btn:hover,.bundle-btn:hover{background:linear-gradient(180deg,#55df55 0%,#2d8a2d 100%);transform:translateY(-3px);box-shadow:0 24px 44px rgba(60,171,60,.4),inset 0 1px 0 rgba(255,255,255,.28)}
 .hero-cta{font-size:1.35rem;min-height:76px;min-width:420px;padding:22px 64px}
+.hero-learn-link{color:var(--g);font-size:.86rem;font-weight:850;text-decoration:none;border-bottom:1px solid rgba(60,171,60,.35);line-height:1.25}
+.hero-learn-link:hover{border-bottom-color:var(--g)}
 .hero-note{font-size:.78rem;font-weight:700;color:var(--mu)}
 .btn-green{font-size:1.14rem;min-height:62px;padding:18px 44px}
 .pcard-btn,.cat-btn{font-size:1rem;min-height:54px;padding:14px 32px}
@@ -403,8 +409,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text'
   .testimonial-footer{margin-top:22px}
 }
 @media(max-width:560px){
-  .brand-strip{height:76px;padding:0 16px}
+  .brand-strip{height:auto;min-height:92px;padding:14px 16px;flex-direction:column;gap:10px}
   .brand-strip strong{font-size:1.55rem;text-align:center;line-height:1.05}
+  .top-learn-link{position:static;transform:none;min-height:38px;font-size:.78rem}
+  .top-learn-link:hover{transform:translateY(-1px)}
   .hero{padding:28px 16px 38px}
   .hero-kicker{font-size:.78rem;line-height:1.35;margin-bottom:8px}
   .hero-subkicker{font-size:.84rem;margin-bottom:18px}
@@ -619,6 +627,7 @@ body.modal-open{overflow:hidden}
 <!-- ═══ TOP BRAND ═══ -->
 <header class="brand-strip">
   <strong>Remote AI <span>Income Skills</span></strong>
+  <a class="top-learn-link" href="Learn%20How%20To%20Make%20Money%20From%20Home.html">Learn How To</a>
 </header>
 
 <!-- ═══ HERO ═══ -->
@@ -662,19 +671,8 @@ body.modal-open{overflow:hidden}
 
     <div class="hero-actions">
       <a class="hero-cta" href="#bundle" data-product="bundle">Unlock The Full AI Bundle</a>
+      <a class="hero-learn-link" href="Learn%20How%20To%20Make%20Money%20From%20Home.html">Learn how to start a stay-at-home business with AI</a>
       <div class="hero-note">Templates · Training videos · Manuals · Prompts · Scripts · Instant access</div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ VSL VIDEO ═══ -->
-<section class="vsl-section" id="vsl">
-  <div class="vsl-inner">
-    <span class="vsl-tag">Watch The Overview</span>
-    <h2>See How The AI Business Builder Bundle Works</h2>
-    <p>A quick walkthrough of the systems, templates, and training included in the bundle.</p>
-    <div class="vsl-frame">
-      <video class="vsl-video" src="voice-ai-offer-hero-fast.mp4" poster="voice-ai-offer-poster.jpg" controls playsinline preload="none"></video>
     </div>
   </div>
 </section>
@@ -1079,6 +1077,7 @@ body.modal-open{overflow:hidden}
 
 <footer class="site-footer">
   <p><span>Nexus Luma</span> Copyright 2026</p>
+  <a class="footer-learn-link" href="Learn%20How%20To%20Make%20Money%20From%20Home.html">Learn How To</a>
 </footer>
 
 <div class="checkout-overlay" id="checkoutOverlay" aria-hidden="true">
