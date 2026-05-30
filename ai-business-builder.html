@@ -73,8 +73,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text'
 .hero-pill-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;max-width:970px;margin:0 auto 28px}
 .hero-pill{min-height:58px;border:1px solid rgba(60,171,60,.38);border-radius:999px;background:#fff;color:var(--tx);display:flex;align-items:center;justify-content:center;text-align:center;gap:10px;padding:10px 18px;font-family:'Oswald',sans-serif;font-size:1rem;font-weight:700;line-height:1.05;text-transform:uppercase;letter-spacing:.035em;box-shadow:0 8px 24px rgba(35,92,35,.08)}
 .hero-pill svg{width:18px;height:18px;color:var(--g);flex:0 0 auto}
-.hero-video-frame{width:min(920px,100%);aspect-ratio:16/9;margin:0 auto 28px;overflow:hidden;border-radius:12px;background:#050505;border:1px solid rgba(23,32,23,.16);box-shadow:0 24px 60px rgba(13,38,13,.2)}
+.hero-video-frame{position:relative;width:min(920px,100%);aspect-ratio:16/9;margin:0 auto 28px;overflow:hidden;border-radius:12px;background:#050505;border:1px solid rgba(23,32,23,.16);box-shadow:0 24px 60px rgba(13,38,13,.2)}
 .hero-video{display:block;width:100%;height:100%;object-fit:cover;background:#050505;cursor:pointer}
+.video-sound-toggle{position:absolute;right:14px;bottom:14px;z-index:2;width:46px;height:46px;border:1px solid rgba(255,255,255,.34);border-radius:999px;background:rgba(5,5,5,.68);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(12px);transition:background .15s,transform .15s,border-color .15s}
+.video-sound-toggle:hover{background:rgba(5,5,5,.82);border-color:rgba(255,255,255,.58);transform:translateY(-1px)}
+.video-sound-toggle svg{width:22px;height:22px;display:block;fill:currentColor}
+.video-sound-toggle .sound-on{display:none}.video-sound-toggle.is-sound-on .sound-on{display:block}.video-sound-toggle.is-sound-on .sound-off{display:none}
 .pain-section,.products-section,.mid-banner,.cat-section,.kit-section,.testimonial-section,.bundle-section,.newsletter,.site-footer{content-visibility:auto}
 .pain-section{contain-intrinsic-size:760px}
 .products-section{contain-intrinsic-size:520px}
@@ -664,8 +668,13 @@ body.modal-open{overflow:hidden}
 
     <div class="hero-video-frame" aria-label="AI Business Builder Bundle overview video">
       <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="voice-ai-offer-poster.jpg" width="1920" height="1080" aria-label="AI Business Builder Bundle overview video. Click to mute or unmute.">
-        <source src="voice-ai-offer-hero-1080p.mp4" type="video/mp4">
+        <source src="voice-ai-offer-hero-1080p-audio.mp4" type="video/mp4" media="(min-width: 760px)">
+        <source src="voice-ai-offer-hero-fast.mp4" type="video/mp4">
       </video>
+      <button class="video-sound-toggle" type="button" aria-label="Unmute video" title="Unmute video">
+        <svg class="sound-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Zm12.6 3 2.2-2.2 1.4 1.4L18 13.4l2.2 2.2-1.4 1.4-2.2-2.2-2.2 2.2-1.4-1.4 2.2-2.2-2.2-2.2 1.4-1.4 2.2 2.2Z"/></svg>
+        <svg class="sound-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Zm12.5 3a4.5 4.5 0 0 0-2.1-3.8v7.6a4.5 4.5 0 0 0 2.1-3.8Zm-2.1-9.2v2.1a8 8 0 0 1 0 14.2v2.1a10 10 0 0 0 0-18.4Z"/></svg>
+      </button>
     </div>
 
     <p class="hero-copy">Stop trying to figure out AI from scattered videos. This starter kit gives you the templates, walkthroughs, prompts, scripts, website foundations, and client-acquisition resources to learn how AI assistants, voice agents, automations, and business websites fit together.</p>
@@ -1579,11 +1588,32 @@ document.querySelectorAll('.hero-cta,.pcard-btn,.cat-btn,.bundle-btn').forEach(b
   });
 });
 
-document.querySelectorAll('.hero-video').forEach(video => {
-  video.addEventListener('click', () => {
+document.querySelectorAll('.hero-video-frame').forEach(frame => {
+  const video = frame.querySelector('.hero-video');
+  const toggle = frame.querySelector('.video-sound-toggle');
+  if (!video || !toggle) return;
+
+  const updateSoundState = () => {
+    const soundOn = !video.muted && video.volume > 0;
+    toggle.classList.toggle('is-sound-on', soundOn);
+    toggle.setAttribute('aria-label', soundOn ? 'Mute video' : 'Unmute video');
+    toggle.setAttribute('title', soundOn ? 'Mute video' : 'Unmute video');
+  };
+
+  const toggleSound = () => {
     video.muted = !video.muted;
+    if (!video.muted && video.volume === 0) video.volume = 1;
     video.play().catch(() => {});
+    updateSoundState();
+  };
+
+  video.addEventListener('click', toggleSound);
+  toggle.addEventListener('click', e => {
+    e.stopPropagation();
+    toggleSound();
   });
+  video.addEventListener('volumechange', updateSoundState);
+  updateSoundState();
 });
 
 document.querySelector('.checkout-close').addEventListener('click', closeCheckout);
