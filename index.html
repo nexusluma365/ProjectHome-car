@@ -31,7 +31,7 @@
   "category": "Digital AI business training",
   "offers": {
     "@type": "Offer",
-    "price": "499",
+    "price": "97",
     "priceCurrency": "USD",
     "availability": "https://schema.org/InStock",
     "url": "#bundle"
@@ -146,11 +146,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text'
 /* CATEGORY SECTION */
 .cat-section{background:#fff;padding:24px 48px 48px}
 .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:1200px;margin:0 auto}
-.cat-card{border-radius:18px;overflow:hidden;position:relative;height:220px;background:var(--softg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:1px solid var(--bd)}
+.cat-card{border-radius:18px;overflow:hidden;position:relative;min-height:220px;background:var(--softg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:1px solid var(--bd);padding:24px 18px}
 .cat-bg{display:flex;align-items:center;justify-content:center;margin-bottom:12px}
 .cat-icon{width:58px;height:58px;margin-right:0}
-.cat-content{position:relative;z-index:2;padding:20px}
-.cat-content h3{font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;color:var(--tx);margin-bottom:12px}
+.cat-content{position:relative;z-index:2;padding:0;width:100%;display:flex;flex-direction:column;align-items:center;gap:12px}
+.cat-content h3{font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;color:var(--tx);margin-bottom:0;line-height:1.25;overflow-wrap:anywhere}
 .cat-btn{display:inline-flex;align-items:center;justify-content:center;text-align:center;background:var(--g);color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.8rem;padding:8px 20px;border-radius:999px;text-decoration:none;transition:background .15s}
 .cat-btn:hover{background:var(--gd)}
 
@@ -374,7 +374,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text'
 .pcard-ico{width:54px;height:54px}
 .pcard-body{padding:12px 14px 14px}
 .cat-section{padding:22px 48px 40px}
-.cat-card{height:170px;border-radius:12px}
+.cat-card{min-height:170px;border-radius:12px}
 .cat-icon{width:46px;height:46px}
 .mid-banner{display:flex;align-items:center;justify-content:center;min-height:auto;padding:54px 24px}
 .mid-left{width:100%;max-width:980px;padding:0;text-align:center}
@@ -448,7 +448,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text'
   .pcard-name{min-height:0}
   .cat-section{padding:16px 16px 32px}
   .cat-grid{grid-template-columns:1fr;gap:14px}
-  .cat-card{height:150px}
+  .cat-card{min-height:168px;padding:22px 16px}
   .mid-banner{padding:44px 18px}
   .mid-left h2{font-size:1.75rem}
   .mid-left .mid-copy{font-size:1.35rem;line-height:1.32}
@@ -528,9 +528,9 @@ body.modal-open{overflow:hidden}
 .field label{font-size:.82rem;font-weight:850;color:var(--tx)}
 .field input{width:100%;height:54px;border:1px solid #dfe7df;border-radius:14px;padding:0 16px;font:600 .98rem/1 -apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;color:var(--tx);outline:none;background:#fff;transition:border .15s,box-shadow .15s}
 .field input:focus{border-color:rgba(60,171,60,.65);box-shadow:0 0 0 4px rgba(60,171,60,.12)}
-.stripe-card-field{min-height:54px;border:1px solid #dfe7df;border-radius:14px;padding:17px 16px;background:#fff;transition:border .15s,box-shadow .15s}
+.stripe-card-field{min-height:54px;border:1px solid #dfe7df;border-radius:14px;padding:17px 16px;background:#fff;transition:border .15s,box-shadow .15s;margin-bottom:18px}
 .stripe-card-field.StripeElement--focus{border-color:rgba(60,171,60,.65);box-shadow:0 0 0 4px rgba(60,171,60,.12)}
-.payment-loading{min-height:108px;border:1px solid #dfe7df;border-radius:16px;background:#fbfdfb;display:grid;place-items:center;color:var(--mu);font-size:.9rem;font-weight:850;text-align:center;padding:18px}
+.payment-loading{min-height:54px;border:1px solid #dfe7df;border-radius:14px;background:#fbfdfb;display:grid;place-items:center;color:var(--mu);font-size:.9rem;font-weight:850;text-align:center;padding:14px 16px;margin-bottom:18px}
 .checkout-error{display:none;margin:0 0 14px;padding:11px 12px;border-radius:12px;background:#fff1f1;border:1px solid #f0c1c1;color:#9b1c1c;font-size:.78rem;font-weight:800;line-height:1.35;text-align:center}
 .checkout-error.is-visible{display:block}
 .checkout-error.is-ok{background:var(--softg);border-color:rgba(60,171,60,.32);color:var(--g)}
@@ -583,8 +583,8 @@ body.modal-open{overflow:hidden}
   .checkout-form-panel{padding:20px 16px 16px}
   .checkout-kicker{font-size:.68rem;margin-bottom:6px}
   .checkout-secure{font-size:.78rem;margin-bottom:14px;align-items:flex-start;line-height:1.35}
-  #paymentElement{margin-bottom:14px!important;min-height:92px!important}
-  .payment-loading{min-height:92px;border-radius:14px}
+  #paymentElement{margin-bottom:14px!important;min-height:54px!important}
+  .stripe-card-field,.payment-loading{min-height:54px;border-radius:14px;margin-bottom:14px}
   .field{margin-bottom:11px}
   .field input{height:56px;border-radius:13px;font-size:1rem}
   .save-row{font-size:.78rem;margin:2px 0 12px}
@@ -652,7 +652,7 @@ body.modal-open{overflow:hidden}
   <strong>Remote AI <span>Income Skills</span></strong>
   <a class="top-learn-link" href="https://nexusluma.com/learnhowtomakemoneyfromhome">Read The Free Guide</a>
 </header>
-<div class="conversion-strip">Beginner AI business templates, training, prompts, scripts, and client-ready systems in one place. <span>Start small from $47 or unlock the full kit.</span></div>
+<div class="conversion-strip">Beginner AI business templates, training, prompts, scripts, and client-ready systems in one place. <span>Special launch offer: full bundle today for $97.</span></div>
 
 <!-- ═══ HERO ═══ -->
 <section class="hero">
@@ -699,10 +699,10 @@ body.modal-open{overflow:hidden}
     </div>
 
     <div class="hero-actions">
-      <a class="hero-cta" href="#bundle" data-product="websiteVoice">Start With The $47 Website Template</a>
-      <a class="hero-learn-link" href="#bundle" data-product="bundle">Or unlock the complete AI Business Builder Bundle</a>
+      <a class="hero-cta" href="#bundle" data-product="bundle">Get The Complete Bundle For $97</a>
+      <a class="hero-learn-link" href="#bundle" data-product="bundle">$1,079 in AI templates, training, scripts, and systems</a>
       <div class="hero-note">Beginner-friendly · Instant digital access · Secure checkout · No income promises</div>
-      <div class="quick-buy-row"><span>Most affordable start: $47</span><span>•</span><a href="#systems">Compare products below</a></div>
+      <div class="quick-buy-row"><span>Launch bundle price: $97</span><span>•</span><a href="#systems">$1,079 value when bought separately</a></div>
     </div>
   </div>
 </section>
@@ -821,17 +821,15 @@ body.modal-open{overflow:hidden}
         <a class="pcard-btn" href="#bundle" data-product="datahunt">Get DataHunt</a>
       </div>
     </div>
-    <!-- Card 4 Sale -->
+    <!-- Card 4 -->
     <div class="pcard">
       <div class="pcard-img">
-        <span class="pcard-badge b-sale">Sale</span>
         <img class="pcard-product-img" src="Website%20template%20with%20Voice%20AI.webp" alt="Website Template with Voice AI product preview" loading="lazy" decoding="async">
       </div>
       <div class="pcard-body">
         <div class="pcard-name">Website Template</div>
         <div class="pcard-price">
           <span class="cur">$47.00</span>
-          <span class="old">$197.00</span>
         </div>
         <div class="pcard-note">Downloads as: Website with Voice AI.zip</div>
         <a class="pcard-btn" href="#bundle" data-product="websiteVoice">Start For $47</a>
@@ -865,7 +863,7 @@ body.modal-open{overflow:hidden}
       <div class="cat-bg"><svg class="cat-icon" aria-hidden="true"><use href="#icon-target"></use></svg></div>
       <div class="cat-content">
         <h3>Client Acquisition Blueprint</h3>
-        <a class="cat-btn" href="#bundle" data-product="blueprint">View Blueprint</a>
+        <a class="cat-btn" href="#bundle" data-product="bundle">View Blueprint</a>
       </div>
     </div>
   </div>
@@ -896,7 +894,7 @@ body.modal-open{overflow:hidden}
         <strong>Best Value</strong>
         <h3>Complete AI Business Builder Bundle</h3>
         <p>Best for serious beginners who want the templates, training, prompts, scripts, manuals, and offer-building resources together.</p>
-        <div class="path-price">$499</div>
+        <div class="path-price">$97</div>
         <a class="cat-btn" href="#bundle" data-product="bundle">Unlock Full Bundle</a>
       </article>
     </div>
@@ -1059,8 +1057,8 @@ body.modal-open{overflow:hidden}
 <!-- ═══ BUNDLE DEAL CTA ═══ -->
 <section class="bundle-section" id="bundle">
   <div class="bundle-inner">
-    <div class="sec-heading" style="max-width:860px;margin-left:auto;margin-right:auto;margin-bottom:12px">Start Small Or Unlock The Complete AI Business Builder Kit</div>
-    <p>Choose the entry product that fits your budget or get the full kit for the strongest learning path. Every option is designed to help you move from watching AI content to actually studying, editing, building, and practicing with business-ready assets.</p>
+    <div class="sec-heading" style="max-width:860px;margin-left:auto;margin-right:auto;margin-bottom:12px">Special Launch Offer: Complete AI Business Builder Kit For $97</div>
+    <p>For the launch window, get the full AI Business Builder Bundle for $97. The complete toolkit adds up to $1,079 in separate product and training value, so today you save $982 when you choose the bundle.</p>
 
 
     <div class="bundle-choice">
@@ -1077,10 +1075,10 @@ body.modal-open{overflow:hidden}
       <div class="choice-card featured">
         <h3>Best Value: Complete AI Business Builder Bundle</h3>
         <p>Get the complete learning toolkit so the pieces connect: templates, training, PDFs, ebooks, prompts, scripts, websites, voice AI, automations, market research, and client acquisition.</p>
-        <div class="choice-price">$499 <small>complete access</small></div>
+        <div class="choice-price">$97 <small>special launch offer</small></div>
         <div class="choice-list">
           <span>Templates, training, manuals, ebooks, and scripts included</span>
-          <span>Save $580 compared to buying separately</span>
+          <span>Save $982 compared to buying separately</span>
           <span>The clearest path from learning to building and practicing</span>
         </div>
       </div>
@@ -1097,8 +1095,8 @@ body.modal-open{overflow:hidden}
         <tr><td><svg class="table-icon" aria-hidden="true"><use href="#icon-bot"></use></svg>AI templates and assistant build files</td><td>$297</td></tr>
         <tr><td><svg class="table-icon" aria-hidden="true"><use href="#icon-gear"></use></svg>Training videos and setup walkthroughs</td><td>$197</td></tr>
         <tr><td><svg class="table-icon" aria-hidden="true"><use href="#icon-chat"></use></svg>PDF manuals, sales scripts, and start-here guides</td><td>$197</td></tr>
-        <tr><td><svg class="table-icon" aria-hidden="true"><use href="#icon-globe"></use></svg>Website template with built-in Voice AI foundation</td><td>$197</td></tr>
-        <tr><td><svg class="table-icon" aria-hidden="true"><use href="#icon-mic"></use></svg>Voice AI and chatbot business training</td><td>$147</td></tr>
+        <tr><td><svg class="table-icon" aria-hidden="true"><use href="#icon-globe"></use></svg>Website template with built-in Voice AI foundation</td><td>$47</td></tr>
+        <tr><td><svg class="table-icon" aria-hidden="true"><use href="#icon-mic"></use></svg>Voice AI and chatbot business training</td><td>$197</td></tr>
         <tr><td><svg class="table-icon" aria-hidden="true"><use href="#icon-target"></use></svg>Market research, sales funnel, and client acquisition resources</td><td>$97</td></tr>
         <tr><td><svg class="table-icon" aria-hidden="true"><use href="#icon-calendar"></use></svg>AI ebooks and prompt libraries</td><td>$47</td></tr>
         <tr class="val-total"><td><strong>TOTAL VALUE</strong></td><td><strong>$1,079</strong></td></tr>
@@ -1106,13 +1104,13 @@ body.modal-open{overflow:hidden}
     </table>
 
     <div class="price-box">
-      <div class="bundle-save">Save $580 when you get the full bundle</div>
+      <div class="bundle-save">Save $982 with the launch bundle offer</div>
       <div class="price-cross">If bought separately: $1,079</div>
-      <div class="price-big"><sup>$</sup>499</div>
-      <div class="price-note">One-time payment · Instant access · Beginner-friendly</div>
+      <div class="price-big"><sup>$</sup>97</div>
+      <div class="price-note">One-time payment · Instant access · Special launch price</div>
     </div>
-    <div class="price-split">Start with the $47 template if you want the lowest risk first step. Choose the complete bundle if you want the full training stack and best overall value.</div>
-    <a class="bundle-btn" href="#bundle" data-product="bundle">Unlock Complete Bundle</a>
+    <div class="price-split"><strong>Clean pricing breakdown:</strong> $1,079 total separate value, $97 paid today for the complete launch bundle, $982 saved.</div>
+    <a class="bundle-btn" href="#bundle" data-product="bundle">Get The Complete Bundle For $97</a>
     <div class="guarantees">
       <div class="guar-it">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3CAB3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -1150,9 +1148,9 @@ body.modal-open{overflow:hidden}
 
 
 <div class="sticky-cta" aria-label="Quick purchase options">
-  <span>Ready to start? <small>Begin with $47 or get the complete bundle.</small></span>
+  <span>Special launch offer <small>Complete bundle today for $97.</small></span>
   <a class="cat-btn" href="#bundle" data-product="websiteVoice">Start For $47</a>
-  <a class="cat-btn" href="#bundle" data-product="bundle">Full Bundle</a>
+  <a class="cat-btn" href="#bundle" data-product="bundle">Bundle $97</a>
 </div>
 
 <div class="checkout-overlay" id="checkoutOverlay" aria-hidden="true">
@@ -1176,14 +1174,14 @@ body.modal-open{overflow:hidden}
         <div class="summary-row"><span>Product</span><strong id="checkoutSummaryProduct">Full Bundle</strong></div>
         <div class="summary-row"><span>Delivery</span><strong>Instant Download</strong></div>
         <div class="summary-row"><span>Payment</span><strong>Stripe secured</strong></div>
-        <div class="summary-row summary-total"><span>Total</span><strong id="checkoutTotal">$499.00</strong></div>
+        <div class="summary-row summary-total"><span>Total</span><strong id="checkoutTotal">$97.00</strong></div>
       </div>
     </aside>
     <section class="checkout-form-panel">
       <div class="checkout-kicker">Stripe-backed payment</div>
       <h2 id="checkoutTitle">Complete Secure Checkout</h2>
       <div class="checkout-secure"><span>✓</span> Card details are encrypted and processed directly through Stripe.</div>
-      <div id="paymentElement" style="margin-bottom:18px;min-height:108px"></div>
+      <div id="paymentElement" class="stripe-card-field" style="min-height:54px"></div>
       <div class="checkout-error" id="checkoutError"></div>
       <button class="pay-button" type="button" id="paySubmit" onclick="submitCardPayment()">Pay Securely</button>
       <p class="checkout-note" id="checkoutNote">Payments are processed securely with Stripe. Your product download appears in this popup after payment is confirmed.</p>
@@ -1229,7 +1227,7 @@ const r2ProductCatalog = {
 };
 
 const checkoutProducts = {
-  bundle:      { key:'bundle',       name:'Full AI Business Builder Bundle',  price:'$499.00', image:'AI%20bundle%20offer%202.webp',              ...r2ProductCatalog.bundle },
+  bundle:      { key:'bundle',       name:'Full AI Business Builder Bundle',  price:'$97.00',  image:'AI%20bundle%20offer%202.webp',              ...r2ProductCatalog.bundle },
   helper:      { key:'helper',       name:'AI Business Helper',               price:'$297.00', image:'AI%20Business%20Helper.webp',               ...r2ProductCatalog.helper },
   email:       { key:'email',        name:'Email Template Builder',           price:'$197.00', image:'Email%20Template%20Builder.webp',           ...r2ProductCatalog.email },
   datahunt:    { key:'datahunt',     name:'DataHunt Market Research',         price:'$97.00',  image:'DataHunt.webp',                             ...r2ProductCatalog.datahunt },
@@ -1242,6 +1240,7 @@ const STRIPE_KEY = 'pk_live_51REXciCySCiHdPyysRD7yOU1ixyNJztWBQZFWRylRen7KDpnr2x
 let stripe = null;
 let stripeScriptPromise = null;
 let stripeElements = null;
+let stripeCardElement = null;
 let activePaymentClientSecret = '';
 let activePaymentIntentId = '';
 let checkoutRequestId = 0;
@@ -1394,45 +1393,38 @@ async function openCheckout(product) {
     activePaymentClientSecret = data.clientSecret;
     activePaymentIntentId = data.paymentIntentId || '';
 
-    /* build Payment Element with brand colours */
-    if (stripeElements) stripeElements = null;
-    stripeElements = stripe.elements({
-      clientSecret: activePaymentClientSecret,
-      appearance: {
-        theme: 'stripe',
-        variables: {
-          colorPrimary:         '#3CAB3C',
-          colorText:            '#172017',
-          colorTextSecondary:   '#5d685d',
-          colorBackground:      '#ffffff',
-          colorDanger:          '#d32f2f',
-          borderRadius:         '14px',
-          fontFamily:           "-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif",
-          spacingUnit:          '4px'
+    /* build a simple one-line credit card field */
+    if (stripeCardElement) {
+      try { stripeCardElement.destroy(); } catch (error) {}
+      stripeCardElement = null;
+    }
+    stripeElements = stripe.elements();
+    stripeCardElement = stripeElements.create('card', {
+      hidePostalCode: true,
+      style: {
+        base: {
+          color: '#172017',
+          fontFamily: "-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif",
+          fontSize: '16px',
+          fontWeight: '600',
+          '::placeholder': {color: '#8a948a'}
         },
-        rules: {
-          '.Input': {
-            border:     '1px solid #dfe7df',
-            boxShadow:  'none',
-            padding:    '14px 16px'
-          },
-          '.Label': {
-            color:      '#172017',
-            fontWeight: '850',
-            fontSize:   '13px'
-          }
+        invalid: {
+          color: '#9b1c1c',
+          iconColor: '#d32f2f'
         }
       }
     });
-
-    const paymentElement = stripeElements.create('payment', {
-      wallets: { applePay: 'never', googlePay: 'never' }
-    });
     if (paymentElementHost) paymentElementHost.innerHTML = '';
-    paymentElement.mount('#paymentElement');
+    stripeCardElement.mount('#paymentElement');
+    stripeCardElement.on('change', event => {
+      setPayMessage(event.error ? event.error.message : '');
+    });
+    if (payButton) payButton.onclick = submitCardPayment;
     setPayBusy(false, 'Pay ' + product.price + ' Securely');
 
   } catch (err) {
+    if (payButton) payButton.onclick = () => openCheckout(activeProduct);
     setPayBusy(false, 'Try Again');
     setPayMessage(paymentSetupMessage(err));
   }
@@ -1440,13 +1432,14 @@ async function openCheckout(product) {
 
 /* ── SUBMIT PAYMENT ── */
 async function submitCardPayment() {
-  if (payBusy || !stripe || !stripeElements) return;
+  if (payBusy || !stripe || !stripeCardElement || !activePaymentClientSecret) return;
   setPayBusy(true);
   setPayMessage('');
 
-  const { error, paymentIntent } = await stripe.confirmPayment({
-    elements:  stripeElements,
-    redirect:  'if_required'
+  const { error, paymentIntent } = await stripe.confirmCardPayment(activePaymentClientSecret, {
+    payment_method: {
+      card: stripeCardElement
+    }
   });
 
   if (error) {

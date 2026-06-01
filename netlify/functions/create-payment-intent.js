@@ -3,7 +3,7 @@ const Stripe = require('stripe');
 const productCatalog = {
   bundle: {
     name: 'Full AI Business Builder Bundle',
-    amount: 49900
+    amount: 9700
   },
   helper: {
     name: 'AI Business Helper',
