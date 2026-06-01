@@ -15,7 +15,7 @@ const productCatalog = {
   },
   datahunt: {
     name: 'DataHunt Market Research',
-    amount: 9700
+    amount: 29700
   },
   websiteVoice: {
     name: 'Website Template',
