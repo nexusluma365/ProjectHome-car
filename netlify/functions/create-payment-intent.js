@@ -2,7 +2,7 @@ const Stripe = require('stripe');
 
 const productCatalog = {
   bundle: {
-    name: 'Complete Business Asset Bundle',
+    name: 'Complete Business Builder Bundle',
     amount: 9700
   },
   helper: {
@@ -22,7 +22,7 @@ const productCatalog = {
     amount: 4700
   },
   blueprint: {
-    name: 'Complete Business Asset Bundle',
+    name: 'Complete Business Builder Bundle',
     amount: 9700
   }
 };
