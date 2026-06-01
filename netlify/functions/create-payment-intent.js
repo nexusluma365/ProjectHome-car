@@ -2,27 +2,27 @@ const Stripe = require('stripe');
 
 const productCatalog = {
   bundle: {
-    name: 'Full AI Business Builder Bundle',
+    name: 'Complete Business Asset Bundle',
     amount: 9700
   },
   helper: {
-    name: 'AI Business Helper',
+    name: 'AI Business Helper Toolkit',
     amount: 29700
   },
   email: {
-    name: 'Email Template Builder',
+    name: 'Email Marketing System',
     amount: 19700
   },
   datahunt: {
-    name: 'DataHunt Market Research',
+    name: 'DataHunt Lead Research System',
     amount: 29700
   },
   websiteVoice: {
-    name: 'Website Template',
+    name: 'Business Launch Website Template',
     amount: 4700
   },
   blueprint: {
-    name: 'Client Acquisition Blueprint',
+    name: 'Complete Business Asset Bundle',
     amount: 9700
   }
 };
